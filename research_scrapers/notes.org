@@ -1,0 +1,72 @@
+* Deviant art
+** TODO Check how to get old posts
+* Google Groups
+** TODO Check how hard is it to scrape
+* Start with this:
+- http://www.nanowrimo.org/en/forums/fanfiction
+* Scraping
+- Save scrape time
+* Save for posts
+- Post title
+- Username
+- Date
+- Type of poster
+- Get alt text for images
+- Keep threads together
+- Sub forum where it comes from
+* Save for comments
+- Author
+- Type of Poster
+- Actual date
+- Text
+- Alt text for images
+* Meta data
+- Number of comments
+- Lenght of thread in days (Original post vs Last)
+* User infomartion
+- Get for original posters and commenters
+- (About me) ASL
+- Get statistics
+- Get time on site
+* Nanowrimo
+** Posts
+ - Title
+ - Date
+ - OP
+ - Text
+ - Keep all comments together
+** Profile
+ - ASL
+ - Occupation
+ - Years done
+ - Name
+** Meta data
+ - Lenght of thread in days (Original post vs Last)
+* Sites to scrape 
+** YouTube forums
+ - No Google API
+ - Will require use of Mechanize or Selenium
+** ccMixter
+ - Traditional forum, shouldn't be too much work
+** OverClocked Remix
+ - Traditional forum, shouldn't be too much work
+** DeviantArt
+ - Problem accesing old posts
+** Flickr
+ - Traditional forum, shouldn't be too much work
+ - Old data readily accesible
+** Nanowrimo
+ - Pretty simple, it's almost ready
+** Ravelry
+ - Some forum posts are archived
+ - Most of the archived can be retrieved
+ - Some archived posts were deleted by users
+** Mugglenet
+ - Traditional forums, shouldn't be too hard
+ - Which specific forums to scrape? Only the fanfic?
+** Fanfiction.net
+
+** http://forums.fanart-central.net/  (in addition to DeviantArt)
+** http://www.hpfanfictionforums.com/  (instead of MuggleNet)  (Justification for a Harry Potter specific site - that's the biggest fandom on fanfiction.net, which is the biggest fan fiction site)
+** http://www.fanfiction.net/forums/general/0/  (in addition to above)
+** http://www.remix64.com/board/  (instead of ccMixter)
