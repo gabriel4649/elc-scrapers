@@ -7,7 +7,7 @@ from scrapy.utils.url import urljoin_rfc
 from scrapy.http.request import Request
 from scrapy import log
 
-from deviant_art.items import ForumPost, Profile
+from research_scrapers.items import ForumThread, Profile
 
 import re
 from datetime import datetime
@@ -26,19 +26,21 @@ class NanoWrimoSpider(CrawlSpider):
     def parse_posts(self, response):
         hxs = HtmlXPathSelector(response)
 
-        if 'fps' in response.meta:
-            fps = response.meta['fps']
+        if 'ft' in response.meta:
+            ft = response.meta['ft']
         else:
-            fps = []
+            ft = ForumThread()
+            ft['title'] = hxs.select("//h1/text()").extract()
+            ft['url'] = response.url
+            ft['responses'] = []
 
-        posts = hxs.select("//div[@class='forum_thread_comment']")
+        posts = hxs.select("//div[@class='forum_thread_comment']")    
         for p in posts:
-            fp = ForumPost()
+            fp = {}
             fp['body'] = p.select(".//div[@class='forum_thread_comment_body']/p/text()").extract()
             fp['author'] = p.select(".//a[@class='forum_thread_comment_author']/text()").extract()
             fp['date'] = p.select(".//span[@class='created_time_ago']/@title").extract()[0]
-            fp['url'] = response.url
-            fps.append(fp)
+            ft['responses'].append(fp)
 
         # Get links to next page in thread if there is a next page
         next_page = hxs.select("//a[@class='next_page']/@href").extract()
@@ -51,22 +53,22 @@ class NanoWrimoSpider(CrawlSpider):
             next_page_url = urljoin_rfc(base_url, next_page_url_relative)
             request = Request(next_page_url,
                       callback=self.parse_posts)
-            request.meta['fps'] = fps
+            request.meta['ft'] = ft
             return request
         # There is no other page, return forum post items
         else:
-            first_post, last_post = fps[0], fps[-1]
+            responses = ft['responses']
+            first_post, last_post = responses[0], responses[-1]
             get_time_obj = lambda x: datetime.strptime(x, '%B %d, %Y %H:%M')
             time_delta_obj = get_time_obj(last_post['date']) - get_time_obj(first_post['date'])
             time_delta = self.days_hours_minutes(time_delta_obj)
 
-            number_of_comments = len(fps)
+            number_of_comments = len(responses)
 
-            for fp in fps:
-                fp['time_delta'] = time_delta
-                fp['number_of_comments'] = number_of_comments
+            ft['time_delta'] = time_delta
+            ft['number_of_comments'] = number_of_comments
 
-            return fps
+            return ft
 
     def parse_profile(self, response):
         hxs = HtmlXPathSelector(response)

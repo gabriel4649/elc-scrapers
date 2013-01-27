@@ -6,11 +6,14 @@
 #     http://doc.scrapy.org/topics/settings.html
 #
 
-BOT_NAME = 'deviant_art'
+BOT_NAME = 'research_scrapers'
 BOT_VERSION = '1.0'
 
-SPIDER_MODULES = ['deviant_art.spiders']
-NEWSPIDER_MODULE = 'deviant_art.spiders'
+SPIDER_MODULES = ['research_scrapers.spiders']
+NEWSPIDER_MODULE = 'research_scrapers.spiders'
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 DOWNLOAD_DELAY = 0.25    # 250 ms of delay
 
+ITEM_PIPELINES = [
+     'research_scrapers.pipelines.NanoWrimoPipeline'
+]

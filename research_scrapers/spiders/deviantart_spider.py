@@ -7,7 +7,7 @@ from scrapy.utils.url import urljoin_rfc
 from scrapy.http.request import Request
 from scrapy import log
 
-from deviant_art.items import ForumPost, Profile
+# from research_scrapers.items import ForumPost, Profile
 
 import re
 from datetime import datetime

@@ -6,12 +6,11 @@
 from scrapy.item import Item, Field
 
 
-class ForumPost(Item):
+class ForumThread(Item):
+    title = Field()
     time_delta = Field()
     number_of_comments = Field()
-    body = Field()
-    date = Field()
-    author = Field()
+    responses = Field()
     url = Field()
 
 class Profile(Item):
