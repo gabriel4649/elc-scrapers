@@ -14,7 +14,7 @@ from selenium import selenium
 
 class SeleniumSpider(CrawlSpider):
     name = "SeleniumSpider"
-    start_urls = ["http://www.domain.com"]
+    start_urls = ["http://productforums.google.com/forum/#!categories/youtube"]
 
     rules = (
     Rule(SgmlLinkExtractor(allow=('\.html', )), callback='parse_page',follow=True),
@@ -23,7 +23,7 @@ class SeleniumSpider(CrawlSpider):
     def __init__(self):
         CrawlSpider.__init__(self)
         self.verificationErrors = []
-        self.selenium = selenium("localhost", 4444, "*chrome", "http://www.domain.com")
+        self.selenium = selenium("localhost", 4444, "*chrome", "http://productforums.google.com/forum/#!categories/youtube")
         self.selenium.start()
 
     def __del__(self):
