@@ -7,9 +7,11 @@ from scrapy.item import Item, Field
 
 
 class ForumThread(Item):
+    author = Field()
     title = Field()
     time_delta = Field()
     number_of_comments = Field()
+    views = Field()
     responses = Field()
     url = Field()
 

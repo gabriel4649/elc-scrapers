@@ -1,54 +1,87 @@
-# Many times when crawling we run into problems where content that is rendered on the page is generated with Javascript and therefore scrapy is unable to crawl for it (eg. ajax requests, jQuery craziness). However, if you use Scrapy along with the web testing framework Selenium then we are able to crawl anything displayed in a normal web browser.
-#
-# Some things to note:
-# You must have the Python version of Selenium RC installed for this to work, and you must have set up Selenium properly. Also this is just a template crawler. You could get much crazier and more advanced with things but I just wanted to show the basic idea. As the code stands now you will be doing two requests for any given url. One request is made by Scrapy and the other is made by Selenium. I am sure there are ways around this so that you could possibly just make Selenium do the one and only request but I did not bother to implement that and by doing two requests you get to crawl the page with Scrapy too.
-#
-# This is quite powerful because now you have the entire rendered DOM available for you to crawl and you can still use all the nice crawling features in Scrapy. This will make for slower crawling of course but depending on how much you need the rendered DOM it might be worth the wait.
-     
-from scrapy.contrib.spiders import CrawlSpider, Rule
+#from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.spider import BaseSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import HtmlXPathSelector
 from scrapy.http import Request
 
-from selenium import selenium
+from research_scrapers.items import ForumThread, Profile
 
-class SeleniumSpider(CrawlSpider):
-    name = "SeleniumSpider"
-    start_urls = ["http://productforums.google.com/forum/#!categories/youtube"]
+from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
 
-    rules = (
-    Rule(SgmlLinkExtractor(allow=('\.html', )), callback='parse_page',follow=True),
-    )
+import time
+import urllib2
+import re
+from random import randint
+
+
+class YouTubeSpider(BaseSpider):
+    name = "youtube"
+    start_urls = ["http://productforums.google.com/forum/#%21categories/youtube"]
+
+    # Rule(SgmlLinkExtractor(
+    #     allow=('forum/#%21categories/youtube', ),
+    #     deny=('forum/#%21category-topic/youtube/\d+', )), callback='parse_page'),
+    # )
 
     def __init__(self):
-        CrawlSpider.__init__(self)
+        BaseSpider.__init__(self)
         self.verificationErrors = []
-        self.selenium = selenium("localhost", 4444, "*chrome", "http://productforums.google.com/forum/#!categories/youtube")
-        self.selenium.start()
+        response = urllib2.urlopen("http://code.jquery.com/jquery.min.js")
+        jquery = response.read()
+        self.jquery = jquery.decode('latin_1')
+        self.browser = webdriver.Firefox() # Get local session of firefox
+
 
     def __del__(self):
-        self.selenium.stop()
+        self.browser.close()
         print self.verificationErrors
-        CrawlSpider.__del__(self)
+        BaseSpider.__del__(self)
 
-    def parse_page(self, response):
-        item = Item()
+    def parse(self, response):
+        print "INSIDE HERE"
+        #hxs = HtmlXPathSelector(response)
 
-        hxs = HtmlXPathSelector(response)
-        #Do some XPath selection with Scrapy
-        hxs.select('//div').extract()
+        self.load_page_with_jquery('http://productforums.google.com/forum/#%21categories/youtube')
 
-        sel = self.selenium
-        sel.open(response.url)
+        for i in range(5):
+            self.browser.execute_script('$("div").animate({ scrollTop: 100000 }, "fast");')
+            time.sleep(randint(1,4))
 
-        #Wait for javscript to load in Selenium
-        time.sleep(2.5)
+        try:
+            divs = self.browser.find_elements_by_xpath("//div[@class='GAK2G4EDKL']")
+            for div in divs:
+                ft = ForumThread()
+                a = div.find_element_by_class_name('GAK2G4EDOI')
+                # Make it load all posts at once
+                link = a.get_attribute('href') + '[1-9999-true]'
+                ft['title'] = a.text
+                ft['author'] = div.find_element_by_class_name("GAK2G4EDEL").text
+                # details: [number of posts, number of views, last updated]
+                details = div.find_elements_by_class_name('GAK2G4EDCM').text.split(' ')[0]
+                # n posts, get the n
+                ft['number_of_comments'] = details[0].text.split(' ')[0]
+                # n views, get the n
+                ft['views'] = details[1].text.split(' ')[0]
+                request = Request(link, callback=self.parse_thread)
+                request.meta['ft'] = ft
+                yield request
 
-        #Do some crawling of javascript created content with Selenium
-        sel.get_text("//div")
-        yield item
+        except NoSuchElementException:
+            assert 0, "can't find seleniumhq"
 
-        # Snippet imported from snippets.scrapy.org (which no longer works)
-        # author: wynbennett
-        # date : Jun 21, 2011
 
+    def parse_thread(self, response):
+        browser = webdriver.Firefox()
+        browser.get(response.url)
+
+        divs = browser.find_elements_by_class_name('GAK2G4EDK2')
+
+
+        browser.close()
+
+    def load_page_with_jquery(self, url):
+        self.browser.get(url) # Load page
+        self.browser.execute_script(self.jquery) # Load jquery
+        time.sleep(3) # Make sure we had enough time to load everything
