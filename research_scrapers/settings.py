@@ -6,13 +6,13 @@
 #     http://doc.scrapy.org/topics/settings.html
 #
 
-BOT_NAME = 'research_scrapers'
-BOT_VERSION = '1.0'
-
 SPIDER_MODULES = ['research_scrapers.spiders']
 NEWSPIDER_MODULE = 'research_scrapers.spiders'
-USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
+
+# Settings to avoid being banned
+# http://doc.scrapy.org/en/latest/topics/practices.html
 DOWNLOAD_DELAY = 0.25    # 250 ms of delay
+COOKIES_ENABLED = False
 
 ITEM_PIPELINES = [
      'research_scrapers.pipelines.NanoWrimoPipeline'
