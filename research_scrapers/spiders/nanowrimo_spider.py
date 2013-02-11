@@ -15,12 +15,13 @@ from datetime import datetime
 class NanoWrimoSpider(CrawlSpider):
     name = "nanowrimo"
     allowed_domains = ["nanowrimo.org"]
-    rules = [Rule(SgmlLinkExtractor(allow=('forums/fanfiction\?page=\d+'))),
+    rules = [Rule(SgmlLinkExtractor(allow=('threads/[0-9]+')), callback='parse_posts'),
+             Rule(SgmlLinkExtractor(allow=('forums/[A-Za-z0-9-]+'))),
+             Rule(SgmlLinkExtractor(allow=('forums/[A-Za-z0-9-]+\?page=\d+'))),
              #Rule(SgmlLinkExtractor(allow=('threads/[0-9]+\?page=[0-9]+')), callback='parse_posts'),
-             Rule(SgmlLinkExtractor(allow=('threads/\d+', )), callback='parse_posts'),
-             Rule(SgmlLinkExtractor(allow=('participants/[a-zA-Z0-9]+', )), callback='parse_profile')]
+             Rule(SgmlLinkExtractor(allow=('participants/\w+')), callback='parse_profile')]
     start_urls = [
-        "http://www.nanowrimo.org/en/forums/fanfiction"
+        "http://www.nanowrimo.org/en/forums"
     ]
 
     def parse_posts(self, response):
@@ -34,7 +35,7 @@ class NanoWrimoSpider(CrawlSpider):
             ft['url'] = response.url
             ft['responses'] = []
 
-        posts = hxs.select("//div[@class='forum_thread_comment']")    
+        posts = hxs.select("//div[@class='forum_thread_comment']")
         for p in posts:
             fp = {}
             fp['body'] = p.select(".//div[@class='forum_thread_comment_body']/p/text()").extract()

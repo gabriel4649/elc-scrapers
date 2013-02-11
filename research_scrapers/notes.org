@@ -1,9 +1,18 @@
+* Search keywords
+- copyright
+- legal
+- illegal
+- permission
+- trademark
+- stealing / steal / stole
+- license
+- rights
+- attorney
+- infringement
+- copy / copying
+- plagiarism
 * Deviant art
 ** TODO Check how to get old posts
-* Google Groups
-** TODO Check how hard is it to scrape
-* Start with this:
-- http://www.nanowrimo.org/en/forums/fanfiction
 * Scraping
 - Save scrape time
 * Save for posts
@@ -70,3 +79,9 @@
 ** http://www.hpfanfictionforums.com/  (instead of MuggleNet)  (Justification for a Harry Potter specific site - that's the biggest fandom on fanfiction.net, which is the biggest fan fiction site)
 ** http://www.fanfiction.net/forums/general/0/  (in addition to above)
 ** http://www.remix64.com/board/  (instead of ccMixter)
+* Next actions
+** TODO Pretty print data files
+** TODO Look at overclocked to see if we can get data without login
+** TODO Do keyword search on nanowrimo
+** TODO Start HPFanfic forums
+** TODO 

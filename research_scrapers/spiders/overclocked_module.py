@@ -1,6 +1,6 @@
 
 
-class Overclocked(Object):
+class Overclocked(object):
 
     def __init__(self, hxs):
         self.data_key = 'ft'

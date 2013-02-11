@@ -3,7 +3,7 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from research_scrapers.items import ForumThread, Profile
 
-from overcloked_module.py import Overclocked
+#from overcloked_module.py import Overclocked
 
 class OverclockedSpider(CrawlSpider):
     name = 'overcloked'
@@ -21,7 +21,7 @@ class OverclockedSpider(CrawlSpider):
 
         # data_key was ft
         if overclocked.data_key in response.meta:
-            data = response.meta[Overclocked.data_key]
+            data = response.meta[overclocked.data_key]
         else:
             data = overclocked.get_newitem()
             overclocked.load_first_page(data)
