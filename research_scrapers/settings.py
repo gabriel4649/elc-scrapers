@@ -15,5 +15,5 @@ DOWNLOAD_DELAY = 0.25    # 250 ms of delay
 COOKIES_ENABLED = False
 
 ITEM_PIPELINES = [
-     'research_scrapers.pipelines.NanoWrimoPipeline'
+     'research_scrapers.pipelines.TextFileExportPipeline'
 ]

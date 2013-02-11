@@ -1,6 +1,6 @@
 
 
-class Overclocked(object):
+class OverclockedHelper(object):
 
     def __init__(self, hxs):
         self.data_key = 'ft'

@@ -3,21 +3,21 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from research_scrapers.items import ForumThread, Profile
 
-#from overcloked_module.py import Overclocked
+from spider_helpers import OverclockedHelper
 
 class OverclockedSpider(CrawlSpider):
-    name = 'overcloked'
+    name = 'overclocked'
     allowed_domains = ['http://ocremix.org']
     start_urls = ['http://ocremix.org/forums/']
 
     rules = (
-        Rule(SgmlLinkExtractor(allow='forumdisplay.php?f=[0-9]+')),
-        Rule(SgmlLinkExtractor(allow='forumdisplay.php?f=[0-9]+&order=desc&page=[0-9]+')),
-        Rule(SgmlLinkExtractor(allow='showthread.php?t=[0-9]+'), callback='parse_thread', follow=True)
+        Rule(SgmlLinkExtractor(allow='forumdisplay.php?f=\d+')),
+        Rule(SgmlLinkExtractor(allow='forumdisplay.php?f=\d+&order=desc&page=\d+')),
+        Rule(SgmlLinkExtractor(allow='showthread.php?t=\d+'), callback='parse_thread', follow=True)
       )
 
     def parse_thread(self, response):
-        overcloked = Overclocked(HtmlXPathSelector(response))
+        overcloked = OverclockedHelper(HtmlXPathSelector(response))
 
         # data_key was ft
         if overclocked.data_key in response.meta:

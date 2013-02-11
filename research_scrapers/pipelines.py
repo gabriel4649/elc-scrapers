@@ -3,11 +3,11 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/topics/item-pipeline.html
 
-import os, json
+import os
 
 from research_scrapers.items import ForumThread, Profile
 
-class NanoWrimoPipeline(object):
+class TextFileExportPipeline(object):
     def __init__(self):
         pass
 
