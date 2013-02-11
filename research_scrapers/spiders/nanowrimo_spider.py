@@ -31,15 +31,20 @@ class NanoWrimoSpider(CrawlSpider):
             ft = response.meta['ft']
         else:
             ft = ForumThread()
-            ft['title'] = hxs.select("//h1/text()").extract()
+            ft['title'] = hxs.select("//h1/text()").extract()[0]
             ft['url'] = response.url
             ft['responses'] = []
 
         posts = hxs.select("//div[@class='forum_thread_comment']")
         for p in posts:
             fp = {}
-            fp['body'] = p.select(".//div[@class='forum_thread_comment_body']/p/text()").extract()
-            fp['author'] = p.select(".//a[@class='forum_thread_comment_author']/text()").extract()
+            body_list = p.select(".//div[@class='forum_thread_comment_body']/p/text()").extract()
+            body_string = ''
+            for body in body_list:
+                body_string += body + '\n'
+
+            fp['body'] = body_string
+            fp['author'] = p.select(".//a[@class='forum_thread_comment_author']/text()").extract()[0]
             fp['date'] = p.select(".//span[@class='created_time_ago']/@title").extract()[0]
             ft['responses'].append(fp)
 
@@ -62,9 +67,9 @@ class NanoWrimoSpider(CrawlSpider):
             first_post, last_post = responses[0], responses[-1]
             get_time_obj = lambda x: datetime.strptime(x, '%B %d, %Y %H:%M')
             time_delta_obj = get_time_obj(last_post['date']) - get_time_obj(first_post['date'])
-            time_delta = self.days_hours_minutes(time_delta_obj)
+            time_delta = str(self.days_hours_minutes(time_delta_obj))
 
-            number_of_comments = len(responses)
+            number_of_comments = str(len(responses))
 
             ft['time_delta'] = time_delta
             ft['number_of_comments'] = number_of_comments
@@ -77,17 +82,28 @@ class NanoWrimoSpider(CrawlSpider):
         profile_box = hxs.select("//div[@id='profile_fact_sheet']")
 
         p = Profile()
-        p['author'] = hxs.select("//h1[@id='profile_name']/text()").extract()
-        p['age'] = profile_box.select(".//dt[text()='Age:']/following::dd[1]/text()").extract()
-        p['location'] = profile_box.select(".//dt[text()='Location:']/following::dd[1]/text()").extract()
-        p['occupation'] =  profile_box.select(".//dt[text()='Occupation:']/following::dd[1]/text()").extract()
+        p['author'] = self.safe_list_get(hxs.select("//h1[@id='profile_name']/text()").extract(), 0).replace('\n','')
+        p['age'] = self.safe_list_get(profile_box.select(".//dt[text()='Age:']/following::dd[1]/text()").extract(), 0)
+        p['location'] = self.safe_list_get(profile_box.select(".//dt[text()='Location:']/following::dd[1]/text()").extract(), 0)
+        p['occupation'] = self.safe_list_get(profile_box.select(".//dt[text()='Occupation:']/following::dd[1]/text()").extract(), 0)
 
         profile_bling = hxs.select("//div[@id='profile_bling']")
         years = profile_bling.select(".//div[@class='year']")
-        p['participation'] = [y.select(".//img/@title").extract()[0] for y in years]
+
+        participation = ''
+        for y in years:
+            participation += self.safe_list_get(y.select(".//img/@title").extract(), 0) + ', '
+
+        p['participation'] = participation
         p['url'] = response.url
 
         return p
 
     def days_hours_minutes(self, td):
         return td.days, td.seconds//3600, (td.seconds//60)%60
+
+    def safe_list_get(self, l, idx, default=''):
+        try:
+            return l[idx]
+        except IndexError:
+            return default
