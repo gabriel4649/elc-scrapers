@@ -1,4 +1,5 @@
-
+from research_scrapers.items import ForumThread, Profile
+from spider_helpers.SpiderUtils import make_url_absolute
 
 class OverclockedHelper(object):
 
@@ -7,25 +8,44 @@ class OverclockedHelper(object):
         self.hxs = hsx
 
     def get_posts(self):
-        pass
+        return hxs.select("//div[@id='posts']/div")
 
-    def load_first_page(self):
-        pass
+    def load_first_page(self, ft):
+        ft['title'] = self.hxs.select("//div[@class='smallfont']/strong/text()").extract()[0]
+        ft['url'] = self.hxs.response.url
+        ft['responses'] = []
 
-    def populate_post_data(self):
-        pass
+    def populate_post_data(self, p):
+        fp = {}
+        
+        body = ""
 
-    def links_to_next_page(self):
-        pass
+        #Check if quoting
+        quote = p.select(".//td[@class='alt2']/div[@style='font-style:italic']/text()").extract()
 
-    def get_new_item(self):
-        pass
+        if quote:
+            body += "Quote: \n" + quote[0]
+            author = p.select(".//td[@class='alt2']/div/strong/text()").extract()[0]
+            body += "By: " + author
+
+        body += "\n Comment: \n" + p.select(".//div[@class='forumpost']/text()").extract()[-1]
+            
+        fp['body'] = body 
+        fp['author'] = p.select(".//a[@class='bigusername']/text()").extract()[0]
+        fp['date'] = ''.join(p.select(".//div[@class='normal']/text()").extract()[4].split())
+
+        return fp
+
+    def new_item(self):
+        return ForumThread()
 
     def next_page(self):
-        return False
+        links = self.hxs.select("//a[@rel='next']/@href").extract()
+
+        return len(links) > 0
 
     def get_next_page(self):
-        pass
+        return make_url_absolute(self.hxs.select("//a[@rel='next']/@href").extract()[0])
 
     def populate_last_page(self):
         pass

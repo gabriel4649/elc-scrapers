@@ -1,7 +1,7 @@
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
-from research_scrapers.items import ForumThread, Profile
+
 
 from spider_helpers import OverclockedHelper
 
@@ -23,15 +23,11 @@ class OverclockedSpider(CrawlSpider):
         if overclocked.data_key in response.meta:
             data = response.meta[overclocked.data_key]
         else:
-            data = overclocked.get_newitem()
+            data = overclocked.new_item()
             overclocked.load_first_page(data)
 
         for p in get_posts:
-            fp = {}
             ft['responses'].append(overclocked.populate_post_data(p))
-
-        # Get links to next page in thread if there is a next page
-        next_page = overclocked.links_to_next_page()
 
         # Check if there is another page
         if overclocked.next_page():

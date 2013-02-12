@@ -34,6 +34,7 @@ def set_prefs(prefs):
 
     # You can extend python path for looking up modules
     #prefs.add('python_path', '~/python/')
+    prefs.add('python_path', '../../lib/python2.7/site-packages/')
 
     # Should rope save object information or not.
     prefs['save_objectdb'] = True

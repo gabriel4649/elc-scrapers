@@ -2,12 +2,12 @@ from scrapy.spider import BaseSpider
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import HtmlXPathSelector
-from scrapy.utils.response import get_base_url
-from scrapy.utils.url import urljoin_rfc
 from scrapy.http.request import Request
 from scrapy import log
 
 from research_scrapers.items import ForumThread, Profile
+
+from spider_helpers.SpiderUtils import days_hours_minutes, make_url_absolute, safe_list_get
 
 import re
 from datetime import datetime
@@ -31,6 +31,7 @@ class NanoWrimoSpider(CrawlSpider):
             ft = response.meta['ft']
         else:
             ft = ForumThread()
+            # TODO Add forum titile
             ft['title'] = hxs.select("//h1/text()").extract()[0]
             ft['url'] = response.url
             ft['responses'] = []
@@ -55,8 +56,7 @@ class NanoWrimoSpider(CrawlSpider):
         if len(next_page) > 0:
             # There is another page
             next_page_url_relative = next_page[0]
-            base_url = get_base_url(response)
-            next_page_url = urljoin_rfc(base_url, next_page_url_relative)
+            next_page_url = self.make_url_absolute(response, next_page_url_relative)
             request = Request(next_page_url,
                       callback=self.parse_posts)
             request.meta['ft'] = ft
@@ -99,11 +99,3 @@ class NanoWrimoSpider(CrawlSpider):
 
         return p
 
-    def days_hours_minutes(self, td):
-        return td.days, td.seconds//3600, (td.seconds//60)%60
-
-    def safe_list_get(self, l, idx, default=''):
-        try:
-            return l[idx]
-        except IndexError:
-            return default
