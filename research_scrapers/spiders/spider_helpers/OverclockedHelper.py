@@ -17,7 +17,7 @@ class OverclockedHelper(object):
 
     def populate_post_data(self, p):
         fp = {}
-        
+
         body = ""
 
         #Check if quoting
@@ -29,8 +29,8 @@ class OverclockedHelper(object):
             body += "By: " + author
 
         body += "\n Comment: \n" + p.select(".//div[@class='forumpost']/text()").extract()[-1]
-            
-        fp['body'] = body 
+
+        fp['body'] = body
         fp['author'] = p.select(".//a[@class='bigusername']/text()").extract()[0]
         fp['date'] = ''.join(p.select(".//div[@class='normal']/text()").extract()[4].split())
 
@@ -47,5 +47,5 @@ class OverclockedHelper(object):
     def get_next_page(self):
         return make_url_absolute(self.hxs.select("//a[@rel='next']/@href").extract()[0])
 
-    def populate_last_page(self):
-        pass
+    def populate_meta_data(self):
+        return lambda x: datetime.strptime(x, '%m-%d-%Y,%I:%M%p')
