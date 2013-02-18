@@ -47,6 +47,7 @@ class NanoWrimoSpider(CrawlSpider):
             fp['body'] = body_string
             fp['author'] = p.select(".//a[@class='forum_thread_comment_author']/text()").extract()[0]
             fp['date'] = p.select(".//span[@class='created_time_ago']/@title").extract()[0]
+            fp['indentation'] = len(p.select('.//div[@class="forum_thread_comment_header"]/ancestor::div[@class="forum_thread_comment_level"]'))
             ft['responses'].append(fp)
 
         # Get links to next page in thread if there is a next page

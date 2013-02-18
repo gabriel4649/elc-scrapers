@@ -38,11 +38,18 @@ class TextFileExportPipeline(object):
             responses = item.get("responses", "")
             responses_string = ''
             for post in responses:
-                responses_string += '-----------------------------------\n'
-                responses_string += "author: " + post.get('author', '') + '\n'
-                responses_string += "date: " + post.get('date', '') + '\n'
-                responses_string += "body: " + post.get('body', '') + '\n'
-                responses_string += '\n-----------------------------------\n'
+                indentation_level = post.get('indentation', 0) - 1
+
+                if indentation_level > 0:
+                   indentation = " " * indentation_level
+                else:
+                    indentation = ""
+
+                responses_string += indentation + '-----------------------------------\n'
+                responses_string += indentation + "author: " + post.get('author', '') + '\n'
+                responses_string += indentation + "date: " + post.get('date', '') + '\n'
+                responses_string += indentation + "body: " + post.get('body', '') + '\n'
+                responses_string += indentation + '-----------------------------------\n'
 
             item_text += "responses: \n"
             item_text += responses_string

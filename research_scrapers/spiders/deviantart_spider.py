@@ -14,7 +14,7 @@ from datetime import datetime
 
 # TODO Remove unused imports
 
-class DeviantSpider(BaseSpider):
+class DeviantSpider(CrawlSpider):
     name = "deviantart"
     allowed_domains = ["deviantart.com"]
     start_urls = [

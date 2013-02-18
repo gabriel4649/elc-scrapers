@@ -1,7 +1,7 @@
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
-from scrapy.http.request import FormRequest
+from scrapy.http import FormRequest
 
 from spider_helpers import OverclockedHelper
 
@@ -16,12 +16,10 @@ class OverclockedSpider(CrawlSpider):
         Rule(SgmlLinkExtractor(allow='forums/showthread.php\?t=\d+'), callback='parse_thread'),
         Rule(SgmlLinkExtractor(allow='forums/forumdisplay.php\?f=\d+&order=desc&page=\d+')),
         Rule(SgmlLinkExtractor(allow='forums/forumdisplay.php\?f=\d+')),
-
-
       )
 
     def login(self, response):
-        return [FormRequest(url="http://ocremix.org/forums/login.php?do=login",
+         return [FormRequest.from_response(response,
                 formdata={'navbar_username': 'cwarrior', 'navbar_password': 'BoeN\NHY'},
                 callback=self.after_login)]
 
