@@ -1,5 +1,6 @@
 from research_scrapers.items import ForumThread, Profile
-from spider_helpers.SpiderUtils import make_url_absolute
+from SpiderUtils import make_url_absolute
+from scrapy.http.request import FormRequest
 
 class OverclockedHelper(object):
 

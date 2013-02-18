@@ -1,20 +1,32 @@
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
-
+from scrapy.http.request import FormRequest
 
 from spider_helpers import OverclockedHelper
 
 class OverclockedSpider(CrawlSpider):
     name = 'overclocked'
-    allowed_domains = ['http://ocremix.org']
+    allowed_domains = ['ocremix.org']
     start_urls = ['http://ocremix.org/forums/']
 
+
     rules = (
-        Rule(SgmlLinkExtractor(allow='forumdisplay.php?f=\d+')),
-        Rule(SgmlLinkExtractor(allow='forumdisplay.php?f=\d+&order=desc&page=\d+')),
-        Rule(SgmlLinkExtractor(allow='showthread.php?t=\d+'), callback='parse_thread', follow=True)
+        Rule(SgmlLinkExtractor(allow='ocremix.org/forums/'), callback='login'),
+        Rule(SgmlLinkExtractor(allow='forums/showthread.php\?t=\d+'), callback='parse_thread'),
+        Rule(SgmlLinkExtractor(allow='forums/forumdisplay.php\?f=\d+&order=desc&page=\d+')),
+        Rule(SgmlLinkExtractor(allow='forums/forumdisplay.php\?f=\d+')),
+
+
       )
+
+    def login(self, response):
+        return [FormRequest(url="http://ocremix.org/forums/login.php?do=login",
+                formdata={'navbar_username': 'cwarrior', 'navbar_password': 'BoeN\NHY'},
+                callback=self.after_login)]
+
+    def after_login(self, response):
+        pass
 
     def parse_thread(self, response):
         overcloked = OverclockedHelper(HtmlXPathSelector(response))
@@ -47,6 +59,5 @@ class OverclockedSpider(CrawlSpider):
             number_of_comments = str(len(responses))
             data['time_delta'] = time_delta
             data['number_of_comments'] = number_of_comments
-
 
             return data

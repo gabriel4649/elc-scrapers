@@ -5,7 +5,6 @@
 
 from scrapy.item import Item, Field
 
-
 class ForumThread(Item):
     author = Field()
     title = Field()
@@ -14,6 +13,7 @@ class ForumThread(Item):
     number_of_comments = Field()
     views = Field()
     responses = Field()
+    forum = Field()
     url = Field()
 
 class Profile(Item):

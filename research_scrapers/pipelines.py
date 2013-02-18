@@ -30,6 +30,7 @@ class TextFileExportPipeline(object):
             item_text = 'Forum Thread \n\n'
             item_text += "title: " + item.get("title", "") + '\n'
             item_text += "author: " + item.get("author", "") + '\n'
+            item_text += "forum: " + item.get("forum_name", "") + '\n'
             item_text += "time_delta: " + item.get("time_delta", "") + '\n'
             item_text += "number_of_comments: " + item.get("number_of_comments", "") + '\n'
             item_text += "views: " + item.get("views", "") + '\n'
