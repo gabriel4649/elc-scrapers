@@ -12,7 +12,8 @@ NEWSPIDER_MODULE = 'research_scrapers.spiders'
 # Settings to avoid being banned
 # http://doc.scrapy.org/en/latest/topics/practices.html
 DOWNLOAD_DELAY = 0.25    # 250 ms of delay
-COOKIES_ENABLED = False
+
+COOKIES_ENABLED = True
 
 ITEM_PIPELINES = [
      'research_scrapers.pipelines.TextFileExportPipeline'

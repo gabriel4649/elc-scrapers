@@ -28,7 +28,6 @@ class DeviantSpider(CrawlSpider):
         for forum in forums:
             print forum
             f = HtmlXPathSelector(Request(forum))
-            print f
             f.select("//td[@class='d-topic f v np']/a/@href").extract()
             posts.append(f.select("//td[@class='d-topic f v np']/a/@href").extract())
 
