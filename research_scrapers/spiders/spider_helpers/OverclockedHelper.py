@@ -18,25 +18,17 @@ class OverclockedHelper(object):
     def populate_post_data(self, p):
         fp = {}
 
-        body = ""
-
-        #Check if quoting
-        quote = p.select(".//td[@class='alt2']/div[@style='font-style:italic']/text()").extract()
-        if quote:
-            body += "Quote: \n" + quote[0]
-            author = p.select(".//td[@class='alt2']/div/strong/text()").extract()[0]
-            body += "By: " + author
-
-
-        comment_body = p.select(".//div[@class='forumpost']/text()").extract()
+        comment_body_list =  p.select('.//div[@class="forumpost"]/descendant-or-self::*/text()').extract()
 
         # Check if post is empty
-        if len(comment_body) < 1:
+        if len(comment_body_list) < 1:
             return fp
 
-        body += "\n Comment: \n" + comment_body[0]
+        comment_body = "\n Comment: \n"
+        for part in comment_body_list:
+            comment_body += ''.join(part)
 
-        fp['body'] = body
+        fp['body'] = comment_body
         fp['author'] = p.select(".//a[@class='bigusername']/text()").extract()[0]
         date_list = p.select(".//div[@class='normal']/text()").extract()[5].split()
         date = ''.join(date_list)
@@ -58,5 +50,5 @@ class OverclockedHelper(object):
     def time_function(self):
         return lambda x: datetime.strptime(x, '%m-%d-%Y,%I:%M%p')
 
-    def get_first_and_last_posts(self, responses):
-        return responses[-1], responses[0]
+    def prepare_for_processing(self, responses):
+        responses.reverse()

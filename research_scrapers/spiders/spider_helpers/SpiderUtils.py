@@ -52,7 +52,8 @@ class ThreadParser(object):
         # There is no other page, return forum post items
         else:
             responses = data['responses']
-            first_post, last_post = helper.get_first_and_last_posts(responses)
+            helper.prepare_for_processing(responses)
+            first_post, last_post = responses[0], responses[-1]
             get_time_obj = helper.time_function()
             time_delta_obj = get_time_obj(last_post['date']) - get_time_obj(first_post['date'])
             time_delta = str(days_hours_minutes(time_delta_obj))
