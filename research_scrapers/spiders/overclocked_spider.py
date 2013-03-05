@@ -18,8 +18,8 @@ class OverclockedSpider(InitSpider, ThreadParser):
         Rule(SgmlLinkExtractor(allow='forums/search.php?searchid=\d+')),
         Rule(SgmlLinkExtractor(allow='forums/search.php?searchid=\d+&pp=\d+&page=\d+')),
         Rule(SgmlLinkExtractor(allow='forums/showthread.php\?t=\d+'), callback='parse_thread'),
-        Rule(SgmlLinkExtractor(allow='forums/forumdisplay.php\?f=\d+&order=desc&page=\d+')),
-        Rule(SgmlLinkExtractor(allow='forums/forumdisplay.php\?f=\d+')),
+        #Rule(SgmlLinkExtractor(allow='forums/forumdisplay.php\?f=\d+&order=desc&page=\d+')),
+        #Rule(SgmlLinkExtractor(allow='forums/forumdisplay.php\?f=\d+')),
       )
 
     def __init__(self):
@@ -60,5 +60,12 @@ class OverclockedSpider(InitSpider, ThreadParser):
         for keyword in keywords:
             yield FormRequest.from_response(response,
                     clickdata={'name':'dosearch'},
-                    formdata={'query': keyword})
+                    formdata={'query': keyword}, callback=self.text)
 
+    def text(self, response):
+        print "SEARCH RESULTS"
+
+        text_file = open(response.headers['Content-Length'] + '.html', "w+")
+        text_file.write(response.body)
+        text_file.close()
+        

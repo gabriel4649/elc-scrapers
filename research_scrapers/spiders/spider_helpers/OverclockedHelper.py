@@ -1,11 +1,14 @@
+from scrapy.selector import HtmlXPathSelector
 from research_scrapers.items import ForumThread, Profile
+from SpiderUtils import check_url
 from datetime import datetime
 
 class OverclockedHelper(object):
 
-    def __init__(self, hxs):
+    def __init__(self, response):
         self.data_key = 'ft'
-        self.hxs = hxs
+        self.hxs = HtmlXPathSelector(response)
+        self.response = response
 
     def get_posts(self):
         return self.hxs.select("//div[@id='posts']/div")
@@ -40,15 +43,33 @@ class OverclockedHelper(object):
         return ForumThread()
 
     def next_page(self):
-        links = self.hxs.select("//a[@rel='next']/@href").extract()
+        prev_link = self.hxs.select('//a[@rel="next"]/@href').extract()
 
-        return len(links) > 0
+        if len(prev_link) > 0:
+            return True
 
-    def get_next_page_relative(self):
-        return self.hxs.select("//a[@rel='next']/@href").extract()[0]
+        return False
 
     def time_function(self):
         return lambda x: datetime.strptime(x, '%m-%d-%Y,%I:%M%p')
 
     def prepare_for_processing(self, responses):
         responses.reverse()
+
+    def get_next_page(self):
+        url, page_num = self.base_url_and_page_number(self.response.url)
+        next_page = url + '&page=' + str(page_num + 1)
+
+        return next_page
+
+    def base_url_and_page_number(self, url):
+        split = url.split('&')
+
+        # Check if we are on the first page
+        if len(split) < 2:
+            return url, 1
+
+        base_url, parameter = split
+        page_num = int(parameter.split('=')[1])
+
+        return base_url, page_num

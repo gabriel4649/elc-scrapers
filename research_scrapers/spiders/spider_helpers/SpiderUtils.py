@@ -1,7 +1,32 @@
+import httplib
+import urlparse
+
 from scrapy.utils.response import get_base_url
 from scrapy.utils.url import urljoin_rfc
-from scrapy.selector import HtmlXPathSelector
 from scrapy.http.request import Request
+
+def get_server_status_code(url):
+    """
+    Download just the header of a URL and
+    return the server's status code.
+    """
+    # http://stackoverflow.com/questions/1140661
+    host, path = urlparse.urlparse(url)[1:3]    # elems [1] and [2]
+    try:
+        conn = httplib.HTTPConnection(host)
+        conn.request('HEAD', path)
+        return conn.getresponse().status
+    except StandardError:
+        return None
+
+def check_url(url):
+    """
+    Check if a URL exists without downloading the whole file.
+    We only check the URL header.
+    """
+    # see also http://stackoverflow.com/questions/2924422
+    good_codes = [httplib.OK, httplib.FOUND, httplib.MOVED_PERMANENTLY]
+    return get_server_status_code(url) in good_codes
 
 def days_hours_minutes(td):
     return td.days, td.seconds//3600, (td.seconds//60)%60
@@ -21,7 +46,7 @@ class ThreadParser(object):
         self.helper = helper
 
     def parse_thread(self, response):
-        helper = self.helper(HtmlXPathSelector(response))
+        helper = self.helper(response)
 
         # data_key was ft
         if helper.data_key in response.meta:
@@ -40,14 +65,13 @@ class ThreadParser(object):
         # Check if there is another page
         if helper.next_page():
             # There is another page
-            next_page_url_relative = helper.get_next_page_relative()
-
-            next_page_url = make_url_absolute(response, next_page_url_relative)
+            next_page_url = helper.get_next_page()
 
             # Make recursive call
             request = Request(next_page_url,
                       callback=self.parse_thread)
             request.meta[helper.data_key] = data
+            
             return request
         # There is no other page, return forum post items
         else:
