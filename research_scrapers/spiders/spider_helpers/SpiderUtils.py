@@ -2,9 +2,12 @@ import httplib
 import urlparse
 from datetime import datetime
 
+
 from scrapy.utils.response import get_base_url
 from scrapy.utils.url import urljoin_rfc
 from scrapy.http.request import Request
+
+from research_scrapers.items import ForumThread
 
 def get_server_status_code(url):
     """
@@ -54,7 +57,7 @@ class ThreadParser(object):
         if self.data_key in response.meta:
             data = response.meta[self.data_key]
         else:
-            data = helper.new_item()
+            data = ForumThread()
             helper.load_first_page(data)
 
         for p in helper.get_posts():
@@ -65,14 +68,23 @@ class ThreadParser(object):
                 data['responses'].append(fp)
 
         # Check if there is another page
-        if helper.next_page():
+        next_page_url = helper.get_next_page()
+        if next_page_url:
             # There is another page
-            next_page_url = helper.get_next_page()
 
             # Make recursive call
             request = Request(next_page_url,
                       callback=self.parse_thread)
             request.meta[self.data_key] = data
+
+            print
+            print "RETURNING REQUEST!!!"
+            print
+            print next_page_url
+            print
+            print "RETURNING REQUEST!!!"
+            print
+
 
             return request
         # There is no other page, return forum post items
@@ -83,8 +95,7 @@ class ThreadParser(object):
             get_time_obj = lambda x: datetime.strptime(x, helper.time_string)
             time_delta_obj = get_time_obj(last_post['date']) - get_time_obj(first_post['date'])
             time_delta = str(days_hours_minutes(time_delta_obj))
-            number_of_comments = str(len(responses))
             data['time_delta'] = time_delta
-            data['number_of_comments'] = number_of_comments
+            data['number_of_comments'] = str(len(responses))
 
             return data

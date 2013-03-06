@@ -21,7 +21,7 @@ class OverclockedHelper(object):
     def populate_post_data(self, p):
         fp = {}
 
-        comment_body_list =  p.select('.//div[@class="forumpost"]/descendant-or-self::*/text()').extract()
+        comment_body_list = p.select('.//div[@class="forumpost"]/descendant-or-self::*/text()').extract()
 
         # Check if post is empty
         if len(comment_body_list) < 1:
