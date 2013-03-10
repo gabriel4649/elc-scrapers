@@ -19,6 +19,7 @@ class Remix64Helper(HelperBase):
 
         ft['author'] = p.select(".//p[@class='author']/strong/descendant-or-self::*/text()").extract()[0]
         ft['url'] = self.response.url
+        ft['forum_name'] = ' '.join(self.hxs.select("//ul[@class='linklist navlinks']/li/a/text()").extract()[0:-2])
         ft['responses'] = []
 
     def populate_post_data(self, p):
@@ -26,9 +27,7 @@ class Remix64Helper(HelperBase):
 
         comment_body_list = p.select(".//div[@class='content']/descendant-or-self::*/text()").extract()
 
-        comment_body = ""
-        for part in comment_body_list:
-            comment_body += ''.join(part)
+        comment_body = ''.join(comment_body_list)
 
         fp['body'] = comment_body
         fp['author'] = p.select(".//p[@class='author']/strong/descendant-or-self::*/text()").extract()[0]
