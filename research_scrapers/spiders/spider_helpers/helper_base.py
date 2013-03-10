@@ -40,6 +40,9 @@ class HelperBase(object):
         return
 
     def parse_thread(self, response):
+        """Generic method to parse forum threads, returns a finished
+        ForumThread item"""
+
         self.hxs = HtmlXPathSelector(response)
         self.response = response
 
