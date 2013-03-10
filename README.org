@@ -1,0 +1,66 @@
+* Install
+To run you need the following depdencies:
+- [[http://scrapy.org/][Scrapy]]
+- [[https://pypi.python.org/pypi/selenium/2.23.0][Selenium for Python]] (Only for YouTube Forums Crawler)
+* Crawlers
+** [[http://forum.deviantart.com/][deviantART]]
+*** Notes
+    Scraping normal forums is mostly done. 
+*** Next items
+**** TODO Support new infrastructure for forum crawling
+**** TODO Add login capability
+**** TODO Do searches automatically
+**** TODO Crawl searches
+** [[http://forums.fanart-central.net/][Fanart Central Forums]]
+*** Notes
+    Haven't started yet.
+*** Next items
+**** TODO Create a template
+** [[http://ocremix.org/forums/][OverClocked ReMix Forums]]
+*** Notes
+    Parsing threads and normal forum posts seems to be ok. 
+*** Next items
+**** TODO Fix bug where post for search doesn't give any results
+** [[http://www.remix64.com/board/][Remix64]]
+*** Notes
+    Practically DONE
+*** Next items
+**** TODO Test it better
+**** TODO Crawl the whole website
+** [[http://productforums.google.com/forum/#!categories/youtube][YouTube Forums]]
+*** Notes
+    In theory it is complete, but it needs more testing.
+*** Next items
+**** TODO Do more testing
+** [[http://www.mmorpgforum.com/][MMORPG Forum]]
+*** Notes
+    Haven't started
+*** Next items
+**** TODO Create template
+** [[http://www.hpfanfictionforums.com/][HPFanFic Forums]]
+*** Notes
+    Appears to be done, needs more testing. 
+*** Next items
+**** TODO Test it more
+**** TODO Crawl the whole website
+** [[http://www.tthfanfic.org/][Twisting the Hellmouth]]
+*** Notes
+    Haven't started yet
+*** Next items
+**** TODO Create template
+* Keywords we are looking for in posts
+- copyright
+- legal
+- illegal
+- permission
+- trademark
+- stealing / steal / stole
+- license
+- rights
+- attorney
+- infringement
+- copy / copying
+- plagiarism
+
+
+
