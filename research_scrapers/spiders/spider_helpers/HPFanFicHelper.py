@@ -8,6 +8,7 @@ from helper_base import HelperBase
 class HPFanFicHelper(HelperBase):
 
     def __init__(self, response):
+        HelperBase.__init__(self)
         self.time_string = '%Y-%m-%dT%H:%M:%S+00:00'
         self.hxs = HtmlXPathSelector(response)
         self.response = response
@@ -26,7 +27,7 @@ class HPFanFicHelper(HelperBase):
 
         comment_body_list = p.select(".//div[@class='post entry-content ']/descendant-or-self::*/text()").extract()
 
-        comment_body = "\n Comment: \n"
+        comment_body = ""
         for part in comment_body_list:
             comment_body += ''.join(part)
 

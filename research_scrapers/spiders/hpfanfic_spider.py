@@ -1,10 +1,9 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 
-from spider_helpers.SpiderUtils import ThreadParser
 from spider_helpers.HPFanFicHelper import HPFanFicHelper
 
-class HPFanFicSpider(CrawlSpider, ThreadParser):
+class HPFanFicSpider(CrawlSpider, HPFanFicHelper):
     name = 'hpfanfic'
     allowed_domains = ['hpfanfictionforums.com']
     start_urls = ['http://www.hpfanfictionforums.com/index.php']
@@ -17,4 +16,4 @@ class HPFanFicSpider(CrawlSpider, ThreadParser):
 
     def __init__(self):
         CrawlSpider.__init__(self)
-        ThreadParser.__init__(self, HPFanFicHelper)
+        HPFanFicHelper.__init__(self)

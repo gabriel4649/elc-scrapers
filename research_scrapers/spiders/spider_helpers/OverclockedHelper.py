@@ -6,6 +6,7 @@ from datetime import datetime
 class OverclockedHelper(object):
 
     def __init__(self, response):
+        #HelperBase.__init__(self)
         self.data_key = 'ft'
         self.hxs = HtmlXPathSelector(response)
         self.response = response

@@ -4,10 +4,10 @@ from scrapy.contrib.spiders import Rule
 from scrapy.http import FormRequest
 from scrapy.http.request import Request
 
-from spider_helpers.SpiderUtils import make_url_absolute, days_hours_minutes, ThreadParser
+from spider_helpers.SpiderUtils import make_url_absolute, days_hours_minutes
 from spider_helpers.OverclockedHelper import OverclockedHelper
 
-class OverclockedSpider(InitSpider, ThreadParser):
+class OverclockedSpider(InitSpider, OverclockedHelper):
     name = 'overclocked'
     allowed_domains = ['ocremix.org']
     login_page = 'http://ocremix.org/forums/index.php'
@@ -24,7 +24,7 @@ class OverclockedSpider(InitSpider, ThreadParser):
 
     def __init__(self):
         InitSpider.__init__(self)
-        ThreadParser.__init__(self, OverclockedHelper)
+        OverclockedHelper.__init__(self)
 
     def init_request(self):
         """This function is called before crawling starts."""
