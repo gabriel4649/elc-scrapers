@@ -45,9 +45,10 @@ To run you need the following depdencies:
 **** TODO Crawl the whole website
 ** [[http://www.tthfanfic.org/][Twisting the Hellmouth]]
 *** Notes
-    Haven't started yet
+    It seems like it works alright.
 *** Next items
-**** TODO Create template
+**** TODO Test it more
+**** TODO Crawl the whole website
 * Keywords we are looking for in posts
 - copyright
 - legal
