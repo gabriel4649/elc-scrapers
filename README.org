@@ -34,9 +34,9 @@ To run you need the following depdencies:
 **** TODO Do more testing
 ** [[http://www.mmorpgforum.com/][MMORPG Forum]]
 *** Notes
-    Haven't started
+    I have implemented most functionality but haven't tested it as a whole yet. 
 *** Next items
-**** TODO Create template
+**** TODO Test it 
 ** [[http://www.hpfanfictionforums.com/][HPFanFic Forums]]
 *** Notes
     Appears to be done, needs more testing. 
@@ -49,6 +49,10 @@ To run you need the following depdencies:
 *** Next items
 **** TODO Test it more
 **** TODO Crawl the whole website
+** [[http://www.nanowrimo.org/][NaNoWriMo]]
+*** Notes
+    100% Ready
+*** Next items
 * Keywords we are looking for in posts
 - copyright
 - legal

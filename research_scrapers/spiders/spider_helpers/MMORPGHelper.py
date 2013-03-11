@@ -7,29 +7,28 @@ class MMORPGHelper(HelperBase):
 
     def __init__(self):
         HelperBase.__init__(self)
-        # 'Fri, 02 Dec 11 17:38:12'
-        self.time_string = "%a, %d %b %y %H:%M:%S"
+        # '11-02-2006, 12:19 PM'
+        self.time_string = "%m-%d-%Y, %I:%M %p"
 
     def get_posts(self):
-        return self.hxs.select("//td[@class='tth-post tth-post-even' or @class='tth-post tth-post-odd']")
+        return self.hxs.select("//div[@id='posts']/div/div/div/div")
 
     def load_first_page(self, ft):
-        ft['title'] = self.hxs.select("//td[@id='top_subject']/text()").extract()[0]
+        ft['title'] = self.hxs.select("//td[@class='navbar']/strong/text()").extract()[0]
 
         p = self.get_posts()[0]
 
-        #ft['author'] = p.select(".//a[starts-with(@title,'View the profile of')]/text()").extract()[0]
-        ft['author'] = p.select(".//td[@width='16%']/b/descendant-or-self::*/text()").extract()[0]
+        ft['author'] = p.select(".//a[@style='text-decoration:none; color:white;']/text()").extract()[0]
         ft['url'] = self.response.url
-        ft['forum_name'] = '/'.join(self.hxs.select("//div[@class='nav']/descendant-or-self::*/text()").extract()[0:-3:2])
+        ft['forum_name'] = '/'.join(hxs.select("//span[@class='navbar']/a/text()").extract())
         ft['responses'] = []
 
     def populate_post_data(self, p):
         fp = {}
 
-        fp['body'] = ' '.join(p.select(".//div[@class='post']/descendant-or-self::*/text()").extract())
-        fp['author'] = p.select(".//td[@width='16%']/b/descendant-or-self::*/text()").extract()[0]
-        fp['date'] = p.select(".//div[@class='smalltext']/text()").extract()[-1].replace(u' \xbb', '')[1:-1]
+        fp['body'] = ' '.join(p.select(".//div[starts-with(@id,'post_message_')]/descendant-or-self::*/text()"))
+        fp['author'] = p.select(".//a[@style='text-decoration:none; color:white;']/text()").extract()[0]
+        fp['date'] = p.select(".//td[@style='font-weight:normal']/text()").extract()[2][5:-10]
 
         return fp
 
@@ -37,6 +36,10 @@ class MMORPGHelper(HelperBase):
         pass
 
     def get_next_page(self):
-        next_page_url = safe_list_get(self.hxs.select(".//td[@class='middletext']/b[1]/following-sibling::a/@href").extract(), 0)
+        nav = self.hxs.select("//div[@class='pagenav']/table")
+        next_page_url_relative = safe_list_get(nav.select(".//td[@class='alt2']/following-sibling::td/a/@href").extract(), 0)
 
-        return next_page_url
+        if next_page_url_relative:
+            return make_url_absolute(self.response, next_page_url_relative)
+
+        return next_page_url_relative
