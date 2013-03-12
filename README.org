@@ -34,9 +34,10 @@ To run you need the following depdencies:
 **** TODO Do more testing
 ** [[http://www.mmorpgforum.com/][MMORPG Forum]]
 *** Notes
-    I have implemented most functionality but haven't tested it as a whole yet. 
+    Seems to be in working order so far. 
 *** Next items
-**** TODO Test it 
+**** TODO Test it more
+**** TODO Crawl the whole website
 ** [[http://www.hpfanfictionforums.com/][HPFanFic Forums]]
 *** Notes
     Appears to be done, needs more testing. 

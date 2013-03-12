@@ -1,6 +1,6 @@
 import abc
 
-from SpiderUtils import safe_list_get
+from SpiderUtils import safe_list_get, make_url_absolute
 from helper_base import HelperBase
 
 class MMORPGHelper(HelperBase):
@@ -20,13 +20,13 @@ class MMORPGHelper(HelperBase):
 
         ft['author'] = p.select(".//a[@style='text-decoration:none; color:white;']/text()").extract()[0]
         ft['url'] = self.response.url
-        ft['forum_name'] = '/'.join(hxs.select("//span[@class='navbar']/a/text()").extract())
+        ft['forum_name'] = '/'.join(self.hxs.select("//span[@class='navbar']/a/text()").extract())
         ft['responses'] = []
 
     def populate_post_data(self, p):
         fp = {}
 
-        fp['body'] = ' '.join(p.select(".//div[starts-with(@id,'post_message_')]/descendant-or-self::*/text()"))
+        fp['body'] = ' '.join(p.select(".//div[starts-with(@id,'post_message_')]/descendant-or-self::*/text()").extract())
         fp['author'] = p.select(".//a[@style='text-decoration:none; color:white;']/text()").extract()[0]
         fp['date'] = p.select(".//td[@style='font-weight:normal']/text()").extract()[2][5:-10]
 

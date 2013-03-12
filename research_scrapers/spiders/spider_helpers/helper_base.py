@@ -86,8 +86,8 @@ class HelperBase(object):
             first_post, last_post = responses[0], responses[-1]
             get_time_obj = lambda x: datetime.strptime(x, self.time_string)
             time_delta_obj = get_time_obj(last_post['date']) - get_time_obj(first_post['date'])
-            time_delta = str(days_hours_minutes(time_delta_obj))
-            data['time_delta'] = time_delta
+            days, hours, minutes = days_hours_minutes(time_delta_obj)
+            data['time_delta'] = str(days) + ' days, ' + str(hours) + ' hours, ' + str(minutes) + ' minutes'
             data['number_of_comments'] = str(len(responses))
 
             return data
