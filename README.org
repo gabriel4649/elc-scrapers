@@ -13,9 +13,10 @@ To run you need the following depdencies:
 **** TODO Crawl searches
 ** [[http://forums.fanart-central.net/][Fanart Central Forums]]
 *** Notes
-    Haven't started yet.
+    First iteration almost ready. 
 *** Next items
-**** TODO Create a template
+**** TODO Create function to fill out body. 
+**** TODO Test it
 ** [[http://ocremix.org/forums/][OverClocked ReMix Forums]]
 *** Notes
     Parsing threads and normal forum posts seems to be ok. 
