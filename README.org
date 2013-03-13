@@ -55,6 +55,11 @@ To run you need the following depdencies:
 *** Notes
     100% Ready
 *** Next items
+** Etsy
+*** Notes
+    Looks pretty easy to scrape. 
+*** Next items
+**** TODO Nothing, until sure it's needed
 * Keywords we are looking for in posts
 - copyright
 - legal
