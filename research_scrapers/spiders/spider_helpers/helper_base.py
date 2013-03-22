@@ -29,7 +29,7 @@ class HelperBase(object):
         return
 
     @abc.abstractmethod
-    def prepare_for_processing(self):
+    def prepare_for_processing(self, responses):
         """Make any final processing before finalizing."""
         return
 

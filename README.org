@@ -3,7 +3,7 @@ To run you need the following depdencies:
 - [[http://scrapy.org/][Scrapy]]
 - [[https://pypi.python.org/pypi/selenium/2.23.0][Selenium for Python]] (Only for YouTube Forums Crawler)
 * Crawlers
-** [[http://forum.deviantart.com/][deviantART]]
+** [[http://forum.deviantart.com/][deviantART]] (deviantart)
 *** Notes
     Scraping normal forums is mostly done. 
 *** Next items
@@ -11,51 +11,50 @@ To run you need the following depdencies:
 **** TODO Add login capability
 **** TODO Do searches automatically
 **** TODO Crawl searches
-** [[http://forums.fanart-central.net/][Fanart Central Forums]]
+** [[http://forums.fanart-central.net/][Fanart Central Forums]] (fanart)
 *** Notes
-    First iteration almost ready. 
+    Looks like it's working just fine. 
 *** Next items
-**** TODO Create function to fill out body. 
-**** TODO Test it
-** [[http://ocremix.org/forums/][OverClocked ReMix Forums]]
+**** TODO Test it more
+** [[http://ocremix.org/forums/][OverClocked ReMix Forums]] (overcloked)
 *** Notes
     Parsing threads and normal forum posts seems to be ok. 
 *** Next items
 **** TODO Fix bug where post for search doesn't give any results
-** [[http://www.remix64.com/board/][Remix64]]
+** [[http://www.remix64.com/board/][Remix64]] (remix64)
 *** Notes
     Practically DONE
 *** Next items
 **** TODO Test it better
 **** TODO Crawl the whole website
-** [[http://productforums.google.com/forum/#!categories/youtube][YouTube Forums]]
+** [[http://productforums.google.com/forum/#!categories/youtube][YouTube Forums]] (youtube)
 *** Notes
     In theory it is complete, but it needs more testing.
 *** Next items
 **** TODO Do more testing
-** [[http://www.mmorpgforum.com/][MMORPG Forum]]
+** [[http://www.mmorpgforum.com/][MMORPG Forum (mmorpg)]]
 *** Notes
     Seems to be in working order so far. 
 *** Next items
 **** TODO Test it more
 **** TODO Crawl the whole website
-** [[http://www.hpfanfictionforums.com/][HPFanFic Forums]]
+** [[http://www.hpfanfictionforums.com/][HPFanFic Forums (hpfanfic]])
 *** Notes
     Appears to be done, needs more testing. 
 *** Next items
 **** TODO Test it more
 **** TODO Crawl the whole website
-** [[http://www.tthfanfic.org/][Twisting the Hellmouth]]
+** [[http://www.tthfanfic.org/][Twisting the Hellmouth]] (tthfanfic)
 *** Notes
     It seems like it works alright.
 *** Next items
 **** TODO Test it more
 **** TODO Crawl the whole website
-** [[http://www.nanowrimo.org/][NaNoWriMo]]
+** [[http://www.nanowrimo.org/][NaNoWriMo]] (nanowrimo)
 *** Notes
     100% Ready
 *** Next items
-** Etsy
+** Etsy (etsy)
 *** Notes
     Looks pretty easy to scrape. 
 *** Next items

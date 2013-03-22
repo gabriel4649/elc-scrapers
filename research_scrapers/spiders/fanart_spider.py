@@ -9,7 +9,9 @@ class FanArtSpider(CrawlSpider, FanArtHelper):
     start_urls = ['http://forums.fanart-central.net/']
 
     rules = (
-        Rule(SgmlLinkExtractor(allow='viewtopic.php\?t=\w+'), callback='parse_thread', follow=False),
+        Rule(SgmlLinkExtractor(allow='viewtopic.php\?sid=[0-9a-zA-z]+'), callback='parse_thread', follow=False),
+        Rule(SgmlLinkExtractor(allow='viewtopic.php\?t=[0-9a-zA-z]+'), callback='parse_thread', follow=False),
+        Rule(SgmlLinkExtractor(allow='viewtopic.php\?t=[0-9a-zA-z]+&sid=[0-9a-zA-z]+'), callback='parse_thread', follow=False),
         Rule(SgmlLinkExtractor(allow='viewforum.php\?f=\d+&sid=\w+')),
         Rule(SgmlLinkExtractor(allow='viewforum.php\?f=\d+&topicdays=\d+&start=\d+&sid=\w+')),
       )
