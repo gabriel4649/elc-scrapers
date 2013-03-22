@@ -5,9 +5,8 @@ To run you need the following depdencies:
 * Crawlers
 ** [[http://forum.deviantart.com/][deviantART]] (deviantart)
 *** Notes
-    Scraping normal forums is mostly done. 
+    Scraping normal forums looks to be working fine. 
 *** Next items
-**** TODO Support new infrastructure for forum crawling
 **** TODO Add login capability
 **** TODO Do searches automatically
 **** TODO Crawl searches
