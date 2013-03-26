@@ -11,7 +11,12 @@ class FanArtHelper(HelperBase):
     def get_posts(self):
         body = self.hxs.select("//table[@class='forumline']")
         posts = body.select(".//tr[td[@class='row1' or @class='row2']]")
-        #posts = body.select(".//td[@class='row1']/table/../..")
+
+        # Check if this is poll posts, if so eliminate the poll
+        voting_bar = posts[0].select(".//img[@src='templates/subSilver/images/voting_bar.gif']").extract()
+        if len(voting_bar) > 0:
+            posts = posts[1:]
+
         return posts[::2]
 
     def load_first_page(self, ft):
@@ -19,7 +24,7 @@ class FanArtHelper(HelperBase):
 
         p = self.get_posts()[0]
 
-        ft['author'] = p.select("..//a/text()").extract()[0]
+        ft['author'] = p.select("..//span[@class='name']/b/a/text()").extract()[0]
         ft['url'] = self.response.url
         forum_name = self.hxs.select("//td[@valign='middle']/span[@class='nav']/a[@class='nav']/descendant-or-self::*/text()").extract()
         forum_name = ' '.join(forum_name)
@@ -30,15 +35,15 @@ class FanArtHelper(HelperBase):
     def populate_post_data(self, p):
         fp = {}
 
-        fp['body'] = ' '.join(p.select(".//tr/td[@colspan='2']/descendant-or-self::*/text()").extract())
-        fp['author'] = p.select(".//a/text()").extract()[0]
+        date = safe_list_get(p.select("//*[starts-with(text(),'Posted')]/text()").extract(), 0)
 
-        possible_dates = p.select(".//span[@class='postdetails']/text()").extract()
-        for pd in possible_dates:
-            if 'Posted' in pd:
-                date = pd
+        if not date:
+            return fp
 
         fp['date'] = date[12:]
+        fp['author'] = p.select("..//span[@class='name']/b/a/text()").extract()[0]
+        fp['body'] = ' '.join(p.select(".//td[span[@class='postbody']]/descendant-or-self::*/text()").extract())
+        #fp['body'] = ' '.join(p.select(".//tr/td[@colspan='2']/descendant-or-self::*/text()").extract())
 
         return fp
 

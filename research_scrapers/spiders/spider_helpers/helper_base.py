@@ -3,6 +3,7 @@ from datetime import datetime
 
 from scrapy.http.request import Request
 from scrapy.selector import HtmlXPathSelector
+from scrapy import log
 
 from research_scrapers.items import ForumThread
 from SpiderUtils import days_hours_minutes
@@ -70,23 +71,19 @@ class HelperBase(object):
                       callback=self.parse_thread)
             request.meta[self.data_key] = data
 
-            print
-            print "RETURNING REQUEST!!!"
-            print
-            print next_page_url
-            print
-            print "RETURNING REQUEST!!!"
-            print
+            log.msg('Making a recursive request call', level=log.INFO)
 
             return request
         # There is no other page, return forum post items
         else:
             responses = data['responses']
             self.prepare_for_processing(responses)
+
             first_post, last_post = responses[0], responses[-1]
             get_time_obj = lambda x: datetime.strptime(x, self.time_string)
             time_delta_obj = get_time_obj(last_post['date']) - get_time_obj(first_post['date'])
             days, hours, minutes = days_hours_minutes(time_delta_obj)
+            
             data['time_delta'] = str(days) + ' days, ' + str(hours) + ' hours, ' + str(minutes) + ' minutes'
             data['number_of_comments'] = str(len(responses))
 
