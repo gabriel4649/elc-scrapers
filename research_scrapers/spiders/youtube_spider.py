@@ -16,7 +16,6 @@ import re
 from random import randint
 from string import replace
 
-
 class YouTubeSpider(CrawlSpider):
     name = "youtube"
     start_urls = ["http://productforums.google.com/forum/#%21categories/youtube"]
@@ -41,7 +40,7 @@ class YouTubeSpider(CrawlSpider):
         print "HERE"
         self.load_page_with_jquery('http://productforums.google.com/forum/#%21categories/youtube')
 
-        for i in range(1):
+        for i in range(10):
             self.browser.execute_script('$("div").animate({ scrollTop: 100000 }, "fast");')
             time.sleep(randint(1,4))
 
@@ -75,7 +74,7 @@ class YouTubeSpider(CrawlSpider):
         browser.execute_script(self.jquery) # Load jquery
         time.sleep(4) # wait for page to load
 
-        for i in range(1):
+        for i in range(10):
             browser.execute_script('$("div").animate({ scrollTop: 100000 }, "fast");')
             time.sleep(randint(1,4))
 
