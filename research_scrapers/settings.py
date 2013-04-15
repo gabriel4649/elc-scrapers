@@ -13,8 +13,12 @@ NEWSPIDER_MODULE = 'research_scrapers.spiders'
 # http://doc.scrapy.org/en/latest/topics/practices.html
 DOWNLOAD_DELAY = 0.5    # 500 ms of delay
 
-COOKIES_ENABLED = True
+COOKIES_ENABLED = False
+
+COOKIES_DEBUG = False
 
 ITEM_PIPELINES = [
      'research_scrapers.pipelines.TextFileExportPipeline'
 ]
+
+BOT_NAME = "Googlebot/2.X (+http://www.googlebot.com/bot.html)"
