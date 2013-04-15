@@ -1,20 +1,14 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.spider import BaseSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import HtmlXPathSelector
 from scrapy.http import Request
-
-from research_scrapers.items import ForumThread, Profile
+from research_scrapers.items import ForumThread
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys
-
 import time
 import urllib2
-import re
 from random import randint
-from string import replace
+from code import interact
 
 class YouTubeSpider(CrawlSpider):
     name = "youtube"
@@ -37,34 +31,36 @@ class YouTubeSpider(CrawlSpider):
         CrawlSpider.__del__(self)
 
     def parse_page(self, response):
-        print "HERE"
         self.load_page_with_jquery('http://productforums.google.com/forum/#%21categories/youtube')
 
-        for i in range(10):
-            self.browser.execute_script('$("div").animate({ scrollTop: 100000 }, "fast");')
-            time.sleep(randint(1,4))
+        self.scroll_page(self.browser,1)
 
-        divs = self.browser.find_elements_by_xpath("//div[@class='GAK2G4EDKL']")
-        print 'divs: ' + str(len(divs))
+        divs = self.browser.find_elements_by_xpath('//div[starts-with(@id,"topic_row_")]')
+        #divs = self.browser.find_elements_by_xpath('//div[@role="listitem"]')
         for div in divs:
             ft = ForumThread()
-            a = div.find_element_by_class_name('GAK2G4EDOI')
-            # Make it load all posts at once
-            link = a.get_attribute('href') #+ '[1-9999-true]'
+
+            a = div.find_element_by_xpath(".//a")
+            link = a.get_attribute('href')
             # Enconde the !
-            link = replace(link, '!', '%21')
+            link.replace('!', '%21')
             ft['url'] = link
             ft['title'] = a.text
-            ft['author'] = div.find_element_by_class_name("GAK2G4EDEL").text
-            # details: [number of posts, number of views, last updated]
-            details = div.find_elements_by_class_name('GAK2G4EDCM')
+            print "TITLE"
+            print a.text
+            print "LINK"
+            print link
+            ft['author'] = div.find_element_by_xpath(".//span[starts-with(text(),'By ')]").text[3:]
+
             # n posts, get the n
-            ft['number_of_comments'] = details[0].text.split(' ')[0]
+            ft['number_of_comments'] = div.find_element_by_xpath(".//span[contains(text(),'post')]").text
             # n views, get the n
-            ft['views'] = details[1].text.split(' ')[0]
+            ft['views'] = div.find_element_by_xpath(".//span[contains(text(),'view')]").text
+
             ft['responses'] = []
             request = Request(link, dont_filter=True, callback=self.parse_thread)
             request.meta['ft'] = ft
+
             yield request
 
     def parse_thread(self, response):
@@ -74,17 +70,23 @@ class YouTubeSpider(CrawlSpider):
         browser.execute_script(self.jquery) # Load jquery
         time.sleep(4) # wait for page to load
 
-        for i in range(10):
-            browser.execute_script('$("div").animate({ scrollTop: 100000 }, "fast");')
-            time.sleep(randint(1,4))
+        self.scroll_page(browser,1)
 
-        divs = browser.find_elements_by_class_name('GAK2G4EDK2')
+
+        divs = browser.find_elements_by_xpath('//div[@id="tm-tl"]/div')
 
         for div in divs:
             fp = {}
-            fp['body'] = div.find_element_by_class_name('GAK2G4EDIAD').text
-            fp['author'] = div.find_element_by_class_name('GAK2G4EDHFB').text
-            fp['date'] = div.find_element_by_class_name('GAK2G4EDO3').text
+
+            try:
+                author = div.find_element_by_xpath(".//span[@class='_username']/span").text
+            except:
+                continue
+
+            fp['author'] = author
+            #interact(local=locals())
+            fp['body'] = div.find_element_by_xpath(".//div[@style='overflow: hidden']/descendant-or-self::*").text
+            fp['date'] =  div.find_element_by_xpath(".//td[@valign='top' and @align='right']/div[2]").text
             ft['responses'].append(fp)
 
         browser.close()
@@ -94,3 +96,8 @@ class YouTubeSpider(CrawlSpider):
         self.browser.get(url) # Load page
         self.browser.execute_script(self.jquery) # Load jquery
         time.sleep(3) # Make sure we had enough time to load everything
+
+    def scroll_page(self, browser, scrolls):
+        for i in range(scrolls):
+            browser.execute_script('$("div").animate({ scrollTop: 100000 }, "fast");')
+            time.sleep(randint(1,4))
