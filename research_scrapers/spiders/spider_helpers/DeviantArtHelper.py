@@ -1,3 +1,4 @@
+
 from research_scrapers.spiders.spider_helpers.SpiderUtils import safe_list_get, make_url_absolute
 from research_scrapers.spiders.spider_helpers.helper_base import HelperBase
 
@@ -12,7 +13,8 @@ class DeviantArtHelper(HelperBase):
         return self.hxs.select("//div[@class='ctext ch']")
 
     def load_first_page(self, ft):
-        ft['title'] =  self.hxs.select("//div[@class='forum-header']/h1/text()").extract()[0]
+        # TODO: Not always catching the title
+        ft['title'] =  safe_list_get(self.hxs.select("//div[@class='forum-header']/h1/text()").extract(),0)
 
         p = self.get_posts()[0]
         ft['author'] = p.select(".//a[@class='u']/text()").extract()[0]
