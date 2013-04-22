@@ -1,5 +1,4 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
-from scrapy.spider import BaseSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.http import Request
 from research_scrapers.items import ForumThread
@@ -8,7 +7,6 @@ from selenium import webdriver
 import time
 import urllib2
 from random import randint
-from code import interact
 
 class YouTubeSpider(CrawlSpider):
     name = "youtube"
@@ -22,8 +20,9 @@ class YouTubeSpider(CrawlSpider):
         self.verificationErrors = []
         response = urllib2.urlopen("http://code.jquery.com/jquery.min.js")
         jquery = response.read()
+
         self.jquery = jquery.decode('latin_1')
-        self.browser = webdriver.Firefox() # Get local session of firefox
+        self.browser = webdriver.Firefox() # Get local session of Firefox
 
     def __del__(self):
         self.browser.close()

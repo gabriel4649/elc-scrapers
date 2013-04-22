@@ -6,7 +6,7 @@ from scrapy.selector import HtmlXPathSelector
 from scrapy import log
 
 from research_scrapers.items import ForumThread
-from SpiderUtils import days_hours_minutes
+from research_scrapers.spiders.spider_helpers.SpiderUtils import days_hours_minutes
 
 class HelperBase(object):
     __metaclass__ = abc.ABCMeta
@@ -83,7 +83,7 @@ class HelperBase(object):
             get_time_obj = lambda x: datetime.strptime(x, self.time_string)
             time_delta_obj = get_time_obj(last_post['date']) - get_time_obj(first_post['date'])
             days, hours, minutes = days_hours_minutes(time_delta_obj)
-            
+
             data['time_delta'] = str(days) + ' days, ' + str(hours) + ' hours, ' + str(minutes) + ' minutes'
             data['number_of_comments'] = str(len(responses))
 
