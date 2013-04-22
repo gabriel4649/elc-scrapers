@@ -79,13 +79,13 @@ files for each user profile.
     In theory it is complete, but it needs more testing.
 *** Next items
 **** TODO Do more testing
-** [[http://www.mmorpgforum.com/][MMORPG Forum (mmorpg)]]
+** [[http://www.mmorpgforum.com/][MMORPG Forum]] (mmorpg)
 *** Notes
     Seems to be in working order so far.
 *** Next items
 **** TODO Test it more
 **** TODO Crawl the whole website
-** [[http://www.hpfanfictionforums.com/][HPFanFic Forums (hpfanfic]])
+** [[http://www.hpfanfictionforums.com/][HPFanFic Forums]] (hpfanfic)
 *** Notes
     Appears to be done, needs more testing.
 *** Next items
