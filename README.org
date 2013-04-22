@@ -48,55 +48,45 @@ separated into files, where each file represents a thread. In the
 case of scrapers that also scrap user profiles there will also be
 files for each user profile.
 * Crawlers
-** [[http://forum.deviantart.com/][deviantART]] (deviantart)
+Some crawlers aren't capable of scraping the entire forums because
+forum searches are required to get very old posts. A workaround for
+this is doing the searches for terms you are interested in the
+respective forums and then setting those results urls as the
+start_urls for the spiders. The that need such a workaround are
+marked with a "*".
+** [[http://forum.deviantart.com/][deviantART]] (deviantart)*
 *** Notes
     Scraping normal forums looks to be working fine.
 *** Next items
-**** TODO Add login capability
-**** TODO Do searches automatically
-**** TODO Crawl searches
 **** TODO Add support for threaded comments
-** [[http://forums.fanart-central.net/][Fanart Central Forums]] (fanart)
+** [[http://forums.fanart-central.net/][Fanart Central Forums]] (fanart)*
 *** Notes
     Looks like it's working just fine.
 *** Next items
-**** TODO Test it more
-** [[http://ocremix.org/forums/][OverClocked ReMix Forums]] (overcloked)
+** [[http://ocremix.org/forums/][OverClocked ReMix Forums]] (overcloked)*
 *** Notes
-    Parsing threads and normal forum posts seems to be ok. There are
-    to versions of the crawler. One tries to login and do searches and
-    parse them the other just scrapes the normal forums.
+    Parsing threads and normal forum posts seems to be ok.
 *** Next items
-**** TODO Fix bug where post for search doesn't give any results
 ** [[http://www.remix64.com/board/][Remix64]] (remix64)
 *** Notes
     Practically DONE
 *** Next items
-**** TODO Test it better
-**** TODO Crawl the whole website
 ** [[http://productforums.google.com/forum/#!categories/youtube][YouTube Forums]] (youtube)
 *** Notes
     In theory it is complete, but it needs more testing.
 *** Next items
-**** TODO Do more testing
 ** [[http://www.mmorpgforum.com/][MMORPG Forum]] (mmorpg)
 *** Notes
     Seems to be in working order so far.
 *** Next items
-**** TODO Test it more
-**** TODO Crawl the whole website
 ** [[http://www.hpfanfictionforums.com/][HPFanFic Forums]] (hpfanfic)
 *** Notes
     Appears to be done, needs more testing.
 *** Next items
-**** TODO Test it more
-**** TODO Crawl the whole website
 ** [[http://www.tthfanfic.org/][Twisting the Hellmouth]] (tthfanfic)
 *** Notes
     It seems like it works alright.
 *** Next items
-**** TODO Test it more
-**** TODO Crawl the whole website
 ** [[http://www.nanowrimo.org/][NaNoWriMo]] (nanowrimo)
 *** Notes
     100% Ready
