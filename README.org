@@ -4,7 +4,7 @@ To run you need the following depdencies:
 - [[http://scrapy.org/][Scrapy]]
 - [[https://pypi.python.org/pypi/selenium/2.23.0][Selenium for Python]] (Only for YouTube Forums Crawler)
 
-The simplest way to install them is by using [[http://www.pip-installer.org/en/latest/][pip]] the easy to use tool
+The simplest way to install them is by using [[http://www.pip-installer.org/en/latest/][pip,]] the easy to use tool
 to install Python packages. Once you have pip installed just run the
 following in your shell of choice:
 
@@ -23,7 +23,7 @@ git clone git@github.com:climatewarrior/elc-scrapers.git
 
 After running this you will have downloaded the scrapers code to the
 working directory of your shell when you ran the command.
-* How to run
+** How to run
 To run the scrapers change directory in your shell to the root
 directory of elc-scrapers. Then run the following:
 #+BEGIN_SRC sh
@@ -37,7 +37,16 @@ scrapy crawl youtube
 #+END_SRC
 
 On the following section there is a list of all the available
-crawlers and their Scrapy names which are located inside parenthesis.
+crawlers and their Scrapy names which are located inside
+parenthesis. To data scraped will located in a directory called:
+#+BEGIN_SRC
+../data/<scraper name>/
+#+END_SRC
+The directory will as indicated, will be at one higher level of in
+the hierarchy as the place where you ran scrapy. The data will be
+separated into files, where each file represents a thread. In the
+case of scrapers that also scrap user profiles there will also be
+files for each user profile.
 * Crawlers
 ** [[http://forum.deviantart.com/][deviantART]] (deviantart)
 *** Notes
@@ -218,3 +227,8 @@ scrapy shell <foo.com/forums/thread_url>
 
 This allows for rapid XPath test and development with the use of an
 interactive Scrapy enabled Python shell.
+* Advanced usage
+** Modifying the data output
+   In the files pipelines.py there is a Scrapy [[http://doc.scrapy.org/en/latest/topics/item-pipeline.html][Item Pipeline]] called
+   TextFileExportPipeline. In order to modify the data output you
+   must modify that class.
