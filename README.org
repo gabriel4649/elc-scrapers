@@ -1,11 +1,47 @@
 * Install
+** Dependencies
 To run you need the following depdencies:
 - [[http://scrapy.org/][Scrapy]]
 - [[https://pypi.python.org/pypi/selenium/2.23.0][Selenium for Python]] (Only for YouTube Forums Crawler)
+
+The simplest way to install them is by using [[http://www.pip-installer.org/en/latest/][pip]] the easy to use tool
+to install Python packages. Once you have pip installed just run the
+following in your shell of choice:
+
+#+BEGIN_SRC sh
+pip install scrapy
+pip install selenium
+#+END_SRC
+** Getting the code
+To get the code from this git repository you need to first install
+[[http://git-scm.com/][git]], the version control system. Once you have git you can run the
+following to fetch the code:
+
+#+BEGIN_SRC sh
+git clone git@github.com:climatewarrior/elc-scrapers.git
+#+END_SRC
+
+After running this you will have downloaded the scrapers code to the
+working directory of your shell when you ran the command.
+* How to run
+To run the scrapers change directory in your shell to the root
+directory of elc-scrapers. Then run the following:
+#+BEGIN_SRC sh
+scrapy crawl <crawler name>
+#+END_SRC
+
+for example to run the youtube crawler you would do:
+
+#+BEGIN_SRC sh
+scrapy crawl youtube
+#+END_SRC
+
+On the following section there is a list of all the available
+crawlers and their Scrapy names which are located inside parenthesis.
 * Crawlers
 ** [[http://forum.deviantart.com/][deviantART]] (deviantart)
 *** Notes
-    Scraping normal forums looks to be working fine. 
+    Scraping normal forums looks to be working fine.
 *** Next items
 **** TODO Add login capability
 **** TODO Do searches automatically
@@ -13,14 +49,14 @@ To run you need the following depdencies:
 **** TODO Add support for threaded comments
 ** [[http://forums.fanart-central.net/][Fanart Central Forums]] (fanart)
 *** Notes
-    Looks like it's working just fine. 
+    Looks like it's working just fine.
 *** Next items
 **** TODO Test it more
 ** [[http://ocremix.org/forums/][OverClocked ReMix Forums]] (overcloked)
 *** Notes
     Parsing threads and normal forum posts seems to be ok. There are
     to versions of the crawler. One tries to login and do searches and
-    parse them the other just scrapes the normal forums. 
+    parse them the other just scrapes the normal forums.
 *** Next items
 **** TODO Fix bug where post for search doesn't give any results
 ** [[http://www.remix64.com/board/][Remix64]] (remix64)
@@ -36,13 +72,13 @@ To run you need the following depdencies:
 **** TODO Do more testing
 ** [[http://www.mmorpgforum.com/][MMORPG Forum (mmorpg)]]
 *** Notes
-    Seems to be in working order so far. 
+    Seems to be in working order so far.
 *** Next items
 **** TODO Test it more
 **** TODO Crawl the whole website
 ** [[http://www.hpfanfictionforums.com/][HPFanFic Forums (hpfanfic]])
 *** Notes
-    Appears to be done, needs more testing. 
+    Appears to be done, needs more testing.
 *** Next items
 **** TODO Test it more
 **** TODO Crawl the whole website
@@ -58,9 +94,16 @@ To run you need the following depdencies:
 *** Next items
 ** Etsy (etsy)
 *** Notes
-    Looks pretty easy to scrape. 
+    Looks pretty easy to scrape.
 *** Next items
 **** TODO Nothing, until sure it's needed
+** eBaum's World (ebaums)
+*** Notes
+    It keeps giving me 403s whenever I try to scrape it. I have tried
+    changing the user agent, removing cookies and other techniques
+    but I keep facing the same problem.
+*** Next items
+**** TODO Look for ways to fix 403 problem.
 * Keywords we are looking for in posts
 - copyright
 - legal
@@ -74,6 +117,106 @@ To run you need the following depdencies:
 - infringement
 - copy / copying
 - plagiarism
+* How to add a new forum scraper
+** Introduction
+Most web forums are very similar. They contain multi-page threads,
+are organized in sub-forums and they include common attributes for
+posts e.g. date posted and author. To simplify the development of new
+forum scrapers I have created a Python class that abstracts all of
+the common things away so you only have to worry about the
+differences. Also, most of the code leverages from the Scrapy provided class
+CrawlSpider which helps implement Scrapy crawlers. In the following
+sections I will explain how to use these classes to make a new
+scraper. Please if you are not familiar with the basics of Scrapy
+please go first through the [[http://doc.scrapy.org/en/latest/][Scrapy documentation]] , especially
+[[http://doc.scrapy.org/en/latest/intro/tutorial.html][the beginner tutorial]].
+** Example classes
+The best way to start is to copy the following files:
+#+BEGIN_SRC sh
+./research_scrapers/spiders/example_spider.py
+./research_scrapers/spiders/spider_helpers/ExampleHelper.py
+#+END_SRC
+and give the copies the name of your new scraper. For example if you
+were creating a scraper for foo.com you would name the copies the
+following way:
+#+BEGIN_SRC sh
+./research_scrapers/spiders/foo_spider.py
+./research_scrapers/spiders/spider_helpers/FooHelper.py
+#+END_SRC
 
+After you have made these copies you can start working on your brand
+new forum scraper.
+** Creating your first forum Spider
+Open the file foo_spider.py with your following editor and take a
+look. First you will notice that this class inherits from [[http://doc.scrapy.org/en/latest/topics/spiders.html#crawlspider][CrawlSpider]]
+and from ExampleHelper. CrawlSpider makes it very easy to crawl
+through entire sites, ExampleHelper will be explained in the next
+section. The job of our Spider class is to go through the entire site
+to find forum threads and call the "parse_thread" method on them. The
+"parse_thread" method, as the name implies, takes
+care of parsing through threads.
 
+What you have to do here is some pretty simple.
 
+- Update the class name from ExampleSpider to FooSpider.
+- Change the name field from "example" to "foo".
+- Update the allowed_domains list which as the name implies is just a
+  list of allowed domains. This keeps the Spider from wandering off
+  to other websites.
+- Update the start_urls list, this is usually just the link to forums
+ you want to scrape, but you could specify more urls where the Spider
+  should start crawling.
+- Update the rules. This is the most important part. Here you specify
+  regular expressions which the Spider should follow or call methods
+  on. You can look at some of the spiders for examples. The key here
+  is to make sure you have expressions to follow through all
+  sub-forums and that all thread urls are detected. For the thread
+  rules you should specify:
+  #+BEGIN_SRC python
+  # We want to call parse_thread on our thread urls
+  callback="parse_thread"
+  #+END_SRC
+
+  and
+
+  #+BEGIN_SRC python
+
+  follow = False
+  #+END_SRC
+
+  We don't want to follow thread urls. If we follow them page links
+  will confuse the spider. The threads won't be parsed correctly unless
+  you take special precautions, "parse_thread" knows how to go through
+  threads with multiple pages. For the details please see the code in
+  helper_base.py.
+
+** Creating your Helper class
+ExampleHelper is a dedicated helper for the spider, which in turn
+inherits from HelperBase. HelperBase contains the logic that is
+consisted across forum sites and ExampleHelper encapsulates logic that
+is specific to the forum we are scraping. Here all you have to do is
+to finish implementing the methods. Docstrings on what each method is
+responsible for are found in help_base.py. Also, you can look at the
+available scrapers for examples. The core task is to fill the data
+fields with the required data using [[http://doc.scrapy.org/en/latest/topics/selectors.html][XPath selectors]]. For example in
+the method
+#+BEGIN_SRC python
+load_first_page(self, ft)
+#+END_SRC
+
+you can add the page title the following way:
+
+#+BEGIN_SRC python
+ft['title'] = self.hxs.select("//div[@id='page-body']/h2/a/text()").extract()[0]
+#+END_SRC
+
+To create these XPath selectors I highly recommend to use Scrapy
+interactively with the command:
+
+#+BEGIN_SRC bash
+scrapy
+ shell <foo.com/forums/thread_url>
+#+END_SRC
+
+This allows for rapid Xpath test and development with the use of an
+interactive Scrapy enabled Python shell.
