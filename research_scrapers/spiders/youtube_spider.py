@@ -10,7 +10,8 @@ from random import randint
 
 class YouTubeSpider(CrawlSpider):
     name = "youtube"
-    start_urls = ["http://productforums.google.com/forum/#%21categories/youtube"]
+    start_urls =  \
+        ["http://productforums.google.com/forum/#%21categories/youtube"]
 
     rules = [Rule(SgmlLinkExtractor(
     allow=('youtube')), callback='parse_page')]
@@ -30,11 +31,13 @@ class YouTubeSpider(CrawlSpider):
         CrawlSpider.__del__(self)
 
     def parse_page(self, response):
-        self.load_page_with_jquery('http://productforums.google.com/forum/#%21categories/youtube')
+        self.load_page_with_jquery( \
+            'http://productforums.google.com/forum/#%21categories/youtube')
 
         self.scroll_page(self.browser,1)
 
-        divs = self.browser.find_elements_by_xpath('//div[starts-with(@id,"topic_row_")]')
+        divs = self.browser.find_elements_by_xpath( \
+            '//div[starts-with(@id,"topic_row_")]')
         #divs = self.browser.find_elements_by_xpath('//div[@role="listitem"]')
         for div in divs:
             ft = ForumThread()
@@ -49,12 +52,18 @@ class YouTubeSpider(CrawlSpider):
             print a.text
             print "LINK"
             print link
-            ft['author'] = div.find_element_by_xpath(".//span[starts-with(text(),'By ')]").text[3:]
+            ft['author'] = \
+                div.find_element_by_xpath( \
+                ".//span[starts-with(text(),'By ')]").text[3:]
 
             # n posts, get the n
-            ft['number_of_comments'] = div.find_element_by_xpath(".//span[contains(text(),'post')]").text
+            ft['number_of_comments'] = \
+                div.find_element_by_xpath( \
+                ".//span[contains(text(),'post')]").text
+
             # n views, get the n
-            ft['views'] = div.find_element_by_xpath(".//span[contains(text(),'view')]").text
+            ft['views'] = div.find_element_by_xpath( \
+                ".//span[contains(text(),'view')]").text
 
             ft['responses'] = []
             request = Request(link, dont_filter=True, callback=self.parse_thread)
@@ -78,14 +87,17 @@ class YouTubeSpider(CrawlSpider):
             fp = {}
 
             try:
-                author = div.find_element_by_xpath(".//span[@class='_username']/span").text
+                author = div.find_element_by_xpath( \
+                    ".//span[@class='_username']/span").text
             except:
                 continue
 
             fp['author'] = author
             #interact(local=locals())
-            fp['body'] = div.find_element_by_xpath(".//div[@style='overflow: hidden']/descendant-or-self::*").text
-            fp['date'] =  div.find_element_by_xpath(".//td[@valign='top' and @align='right']/div[2]").text
+            fp['body'] = div.find_element_by_xpath( \
+                ".//div[@style='overflow: hidden']/descendant-or-self::*").text
+            fp['date'] =  div.find_element_by_xpath( \
+                ".//td[@valign='top' and @align='right']/div[2]").text
             ft['responses'].append(fp)
 
         browser.close()
@@ -98,5 +110,6 @@ class YouTubeSpider(CrawlSpider):
 
     def scroll_page(self, browser, scrolls):
         for i in range(scrolls):
-            browser.execute_script('$("div").animate({ scrollTop: 100000 }, "fast");')
+            browser.execute_script( \
+                '$("div").animate({ scrollTop: 100000 }, "fast");')
             time.sleep(randint(1,4))
