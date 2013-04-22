@@ -92,12 +92,12 @@ crawlers and their Scrapy names which are located inside parenthesis.
 *** Notes
     100% Ready
 *** Next items
-** Etsy (etsy)
+** [[http://www.etsy.com/forums][Etsy]] (etsy)
 *** Notes
     Looks pretty easy to scrape.
 *** Next items
 **** TODO Nothing, until sure it's needed
-** eBaum's World (ebaums)
+** [[http://forum.ebaumsworld.com/][eBaum's World]] (ebaums)
 *** Notes
     It keeps giving me 403s whenever I try to scrape it. I have tried
     changing the user agent, removing cookies and other techniques
@@ -213,10 +213,9 @@ ft['title'] = self.hxs.select("//div[@id='page-body']/h2/a/text()").extract()[0]
 To create these XPath selectors I highly recommend to use Scrapy
 interactively with the command:
 
-#+BEGIN_SRC bash
-scrapy
- shell <foo.com/forums/thread_url>
+#+BEGIN_SRC sh
+scrapy shell <foo.com/forums/thread_url>
 #+END_SRC
 
-This allows for rapid Xpath test and development with the use of an
+This allows for rapid XPath test and development with the use of an
 interactive Scrapy enabled Python shell.
