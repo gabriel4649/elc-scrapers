@@ -180,7 +180,6 @@ What you have to do here is some pretty simple.
   and
 
   #+BEGIN_SRC python
-
   follow = False
   #+END_SRC
 
