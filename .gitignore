@@ -39,3 +39,7 @@ nosetests.xml
 
 # Data files 
 *.json
+
+# Documentation
+*.pdf
+*.tex
