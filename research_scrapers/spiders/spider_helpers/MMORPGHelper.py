@@ -1,7 +1,7 @@
-import abc
-
 from SpiderUtils import safe_list_get, make_url_absolute
 from helper_base import HelperBase
+
+from datetime import date, timedelta
 
 class MMORPGHelper(HelperBase):
 
@@ -18,7 +18,12 @@ class MMORPGHelper(HelperBase):
 
         p = self.get_posts()[0]
 
-        ft['author'] = p.select(".//a[@style='text-decoration:none; color:white;']/text()").extract()[0]
+        author = safe_list_get(p.select(".//a[@style='text-decoration:none; color:white;']/text()").extract(), 0)
+
+        if not author:
+            author = safe_list_get(p.select(".//div[span[@style='color:#d79c2b;font:10px bold;']]/text()").extract(), 0)
+
+        ft['author'] = author
         ft['url'] = self.response.url
         ft['forum_name'] = '/'.join(self.hxs.select("//span[@class='navbar']/a/text()").extract())
         ft['responses'] = []
@@ -27,8 +32,23 @@ class MMORPGHelper(HelperBase):
         fp = {}
 
         fp['body'] = ' '.join(p.select(".//div[starts-with(@id,'post_message_')]/descendant-or-self::*/text()").extract())
-        fp['author'] = p.select(".//a[@style='text-decoration:none; color:white;']/text()").extract()[0]
-        fp['date'] = p.select(".//td[@style='font-weight:normal']/text()").extract()[2][5:-10]
+        author = safe_list_get(p.select(".//a[@style='text-decoration:none; color:white;']/text()").extract(), 0)
+
+        if not author:
+            author = safe_list_get(p.select(".//div[span[@style='color:#d79c2b;font:10px bold;']]/text()").extract(), 0)
+
+        fp['author'] = author
+        post_date = p.select(".//td[@style='font-weight:normal']/text()").extract()[2][5:-10]
+
+        if 'Today' in post_date or 'Yesterday' in post_date:
+            if 'Today' in post_date:
+                day  = date.today()
+            else:
+                day = date.today() - timedelta(1)
+
+                post_date = day.strftime('%m-%d-%Y, ') + post_date.split(',')[1]
+
+        fp['date'] = post_date
 
         return fp
 
