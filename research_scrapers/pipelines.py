@@ -4,7 +4,7 @@
 # See: http://doc.scrapy.org/topics/item-pipeline.html
 
 import os
-from hashlib import md5
+import re
 
 from research_scrapers.items import ForumThread, Profile
 
@@ -13,10 +13,11 @@ class TextFileExportPipeline(object):
         pass
 
     def process_item(self, item, spider):
-        m = md5()
-        m.update(item['url'])
-        f = '../../data/' + spider.__class__.__name__ + '-' + m.digest() + '-' + item.__class__.__name__ + '.txt'
+        identifier = item['url'].split('/')[-1]
+        identifier = re.sub('[-!$%^#&*()_+|~=`{}\[\]:\";\'<>?,.\/]', '', identifier)
+        f = '../data/' + spider.__class__.__name__ + '/' + identifier + item.__class__.__name__ + '.txt'
         d = os.path.dirname(f)
+
         if not os.path.exists(d):
             os.makedirs(d)
 
