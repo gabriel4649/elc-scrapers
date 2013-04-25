@@ -4,20 +4,21 @@ terms=( "copyright" "legal" "illegal" "permission" "trademark" "stealing" \
 "plagiarism" );
 
 dir="$1"
+dest="$2"
 
-if [ -f "$dir/counts" ];
+if [ -f "$dest/counts.txt" ];
 then
-    rm "$dir/counts"
+    rm "$dest/counts.txt"
 fi
 
-touch "$dir/counts"
+touch "$dest/counts.txt"
 for i in "${terms[@]}"
 do
-    grep -rl "$i" $dir | wc -l > temp
-    echo "$i" | cat - temp >> "$dir/counts"
+    grep -rl "$i" "$dir" | wc -l > temp
+    echo "$i" | cat - temp >> "$dest/counts.txt"
     rm temp
 done
 
 ls "$dir" | wc -l > temp
-echo "total" | cat - temp >> "$dir/counts"
+echo "total" | cat - temp >> "$dest/counts.txt"
 rm temp
