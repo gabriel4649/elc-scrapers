@@ -1,5 +1,3 @@
-import abc
-
 from SpiderUtils import safe_list_get, make_url_absolute
 from helper_base import HelperBase
 
@@ -26,7 +24,6 @@ class Remix64Helper(HelperBase):
         fp = {}
 
         comment_body_list = p.select(".//div[@class='content']/descendant-or-self::*/text()").extract()
-
         comment_body = ''.join(comment_body_list)
 
         fp['body'] = comment_body
