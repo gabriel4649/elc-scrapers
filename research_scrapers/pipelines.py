@@ -13,8 +13,8 @@ class TextFileExportPipeline(object):
         pass
 
     def process_item(self, item, spider):
-        identifier = item['url'].split('/')[-1]
-        identifier = re.sub('[-!$%^#&*()_+|~=`{}\[\]:\";\'<>?,.\/]', '', identifier)
+        identifier = ''.join(item['url'].split('/'))
+        identifier = re.sub(r'[-!$%^#&*()_+|~=`{}\[\]:\";\'<>?,.\/]', '', identifier)
         f = '../data/' + spider.__class__.__name__ + '/' + identifier + item.__class__.__name__ + '.txt'
         d = os.path.dirname(f)
 
