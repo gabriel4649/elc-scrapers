@@ -7,7 +7,7 @@ from deviant_urls import urls
 
 class DeviantSpider(CrawlSpider, DeviantArtHelper):
     name = "deviantart"
-    allowed_domains = ["deviantart.com"]
+    allowed_domains = ["forum.deviantart.com"]
     #start_urls = ["https://forum.deviantart.com/"]
 
     start_urls = urls
@@ -15,8 +15,8 @@ class DeviantSpider(CrawlSpider, DeviantArtHelper):
     rules = (
     Rule(SgmlLinkExtractor(allow=r'\w+/\w+/\d+'), callback='parse_thread', \
          follow=False),
-    Rule(SgmlLinkExtractor(allow=r'\w+/w\+')),
-    Rule(SgmlLinkExtractor(allow=r'\w+/w\+/\?offset=\d+')),
+    #Rule(SgmlLinkExtractor(allow=r'\w+/w\+')),
+    #Rule(SgmlLinkExtractor(allow=r'\w+/w\+/\?offset=\d+')),
     )
 
     def __init__(self):

@@ -1,4 +1,3 @@
-
 from research_scrapers.spiders.spider_helpers.SpiderUtils import safe_list_get, make_url_absolute
 from research_scrapers.spiders.spider_helpers.helper_base import HelperBase
 
@@ -14,7 +13,7 @@ class DeviantArtHelper(HelperBase):
 
     def load_first_page(self, ft):
         # TODO: Not always catching the title
-        ft['title'] =  safe_list_get(self.hxs.select("//div[@class='forum-header']/h1/text()").extract(),0)
+        ft['title'] =  self.hxs.select("//div[@class='forum-header']/h1/text()").extract()[0]
 
         p = self.get_posts()[0]
         ft['author'] = p.select(".//a[@class='u']/text()").extract()[0]
@@ -27,6 +26,8 @@ class DeviantArtHelper(HelperBase):
         fp = {}
         fp['body'] =  ''.join(p.select(".//div[@class='text text-ii']/descendant-or-self::*/text()").extract())
         fp['author'] = p.select(".//a[@class='u']/text()").extract()[0]
+        fp['indentation'] = len(p.select(".//ancestor::div[@class='nest']"))
+
         date = p.select(".//span[@class='cc-time']/a/@title").extract()[0]
 
         if 'ago' in date:
