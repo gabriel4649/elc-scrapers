@@ -7,15 +7,15 @@ from fanart_urls import urls
 
 class FanArtSpider(CrawlSpider, FanArtHelper):
     name = 'fanart'
-    allowed_domains = ['fanart-central.net']
+    allowed_domains = ['forums.fanart-central.net']
     start_urls = urls
 
     rules = (
-        Rule(SgmlLinkExtractor(allow='viewtopic.php', deny='start'), \
+        Rule(SgmlLinkExtractor(allow='viewtopic'), \
              callback='parse_thread', follow=False),
-        Rule(SgmlLinkExtractor(allow=r'viewforum.php\?f=\d+&sid=\w+')),
-        Rule(SgmlLinkExtractor(allow= \
-                               r'viewforum.php\?f=\d+&topicdays=\d+&start=\d+&sid=\w+')),
+        #Rule(SgmlLinkExtractor(allow=r'viewforum\.php\?f=\d+&sid=\w+')),
+        #Rule(SgmlLinkExtractor(allow= \
+        #                       r'viewforum\.php\?f=\d+&topicdays=\d+&start=\d+&sid=\w+')),
       )
 
     def __init__(self):

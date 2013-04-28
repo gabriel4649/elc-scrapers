@@ -11,10 +11,10 @@ class OverclockedSpider(CrawlSpider, OverclockedHelper):
     start_urls = urls
 
     rules = (
-        Rule(SgmlLinkExtractor(allow=r'forums/showthread.php\?[tp]=\d+',
+        Rule(SgmlLinkExtractor(allow=r'forums/showthread\.php\?[tp]=\d+', \
                                deny=r'.*page=\d+.*'), callback='parse_thread', follow=False),
-        Rule(SgmlLinkExtractor(allow=r'forums/forumdisplay.php\?f=\d+&order=desc&page=\d+')),
-        Rule(SgmlLinkExtractor(allow=r'forums/forumdisplay.php\?f=\d+')),
+        #Rule(SgmlLinkExtractor(allow=r'forums/forumdisplay.php\?f=\d+&order=desc&page=\d+')),
+        #Rule(SgmlLinkExtractor(allow=r'forums/forumdisplay.php\?f=\d+')),
       )
 
     def __init__(self):
