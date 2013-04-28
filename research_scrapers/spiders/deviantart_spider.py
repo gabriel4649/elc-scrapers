@@ -3,21 +3,20 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 
 from spider_helpers.DeviantArtHelper import DeviantArtHelper
 
+from deviant_urls import urls
+
 class DeviantSpider(CrawlSpider, DeviantArtHelper):
     name = "deviantart"
     allowed_domains = ["deviantart.com"]
     #start_urls = ["https://forum.deviantart.com/"]
 
-    start_urls = ["http://forum.deviantart.com/devart/suggestions/1831661/",
-     "http://forum.deviantart.com/devart/suggestions/1019379/",
-     "http://forum.deviantart.com/devart/suggestions/91595/",
-     "http://forum.deviantart.com/devart/suggestions/585629/",
-     "http://forum.deviantart.com/devart/suggestions/280176/",]
+    start_urls = urls
 
     rules = (
-    Rule(SgmlLinkExtractor(allow='\w+/\w+/\d+'), callback='parse_thread', follow=False),
-    Rule(SgmlLinkExtractor(allow='\w+/w\+')),
-    Rule(SgmlLinkExtractor(allow='\w+/w\+/\?offset=\d+')),
+    Rule(SgmlLinkExtractor(allow=r'\w+/\w+/\d+'), callback='parse_thread', \
+         follow=False),
+    Rule(SgmlLinkExtractor(allow=r'\w+/w\+')),
+    Rule(SgmlLinkExtractor(allow=r'\w+/w\+/\?offset=\d+')),
     )
 
     def __init__(self):
