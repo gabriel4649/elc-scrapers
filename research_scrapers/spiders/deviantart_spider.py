@@ -13,8 +13,10 @@ class DeviantSpider(CrawlSpider, DeviantArtHelper):
     start_urls = urls
 
     rules = (
-    Rule(SgmlLinkExtractor(allow=r'\w+/\w+/\d+'), callback='parse_thread', \
-         follow=False),
+        Rule(SgmlLinkExtractor(allow=r'\w+/\w+/\d+', \
+                               deny=('offset', 'comments_view'), \
+                               callback='parse_thread', \
+                               follow=False),
     #Rule(SgmlLinkExtractor(allow=r'\w+/w\+')),
     #Rule(SgmlLinkExtractor(allow=r'\w+/w\+/\?offset=\d+')),
     )
