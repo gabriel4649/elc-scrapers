@@ -52,7 +52,7 @@ class HPFanFicSpider(CrawlSpider, HPFanFicHelper):
         Rule(SgmlLinkExtractor(allow=r'showtopic=\d+', deny=r'page=\d+'), \
              callback=r'parse_thread', follow=False),
         Rule(SgmlLinkExtractor( \
-                                allow=r'showforum=\d+&prune_day=100&sort_by=Z-A&sort_key=last_post&topicfilter=all&page=\d+')),
+                                allow=r'showforum=\d+&prune_day=100&sort_by=Z-A&sort_key=last_post&topicfilter=all&page=\d+', deny=('setlanguage', 'cal_id'))),
         #Rule(SgmlLinkExtractor(allow=r'showforum=\d+', deny=('sort'))),
     )
 
