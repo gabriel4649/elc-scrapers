@@ -14,7 +14,7 @@ class DeviantSpider(CrawlSpider, DeviantArtHelper):
 
     rules = (
         Rule(SgmlLinkExtractor(allow=r'\w+/\w+/\d+', \
-                               deny=('offset', 'comments_view'), \
+                               deny=('offset', 'comments_view')), \
                                callback='parse_thread', \
                                follow=False),
     #Rule(SgmlLinkExtractor(allow=r'\w+/w\+')),
