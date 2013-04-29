@@ -1,7 +1,3 @@
-import abc
-
-from scrapy.selector import HtmlXPathSelector
-
 from SpiderUtils import safe_list_get
 from helper_base import HelperBase
 
