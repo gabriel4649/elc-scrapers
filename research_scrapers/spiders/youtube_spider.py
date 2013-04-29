@@ -4,6 +4,8 @@ from scrapy.http import Request
 from research_scrapers.items import ForumThread
 
 from selenium import webdriver
+from selenium.webdriver.common.alert import Alert
+
 import time
 import urllib2
 from random import randint
@@ -23,6 +25,7 @@ class YouTubeSpider(CrawlSpider):
         jquery = response.read()
 
         self.jquery = jquery.decode('latin_1')
+
         self.browser = webdriver.Firefox() # Get local session of Firefox
 
     def __del__(self):
@@ -33,8 +36,8 @@ class YouTubeSpider(CrawlSpider):
     def parse_page(self, response):
         self.load_page_with_jquery( \
             'http://productforums.google.com/forum/#%21categories/youtube')
-
-        self.scroll_page(self.browser,1)
+        self.browser.execute_script('window.onbeforeunload = function() {}')
+        self.scroll_page(self.browser,12700)
 
         divs = self.browser.find_elements_by_xpath( \
             '//div[starts-with(@id,"topic_row_")]')
@@ -76,9 +79,11 @@ class YouTubeSpider(CrawlSpider):
         browser = webdriver.Firefox()
         browser.get(ft['url'])
         browser.execute_script(self.jquery) # Load jquery
+        alert = browser.switch_to_alert()
+        alert.dismiss()
         time.sleep(4) # wait for page to load
 
-        self.scroll_page(browser,1)
+        self.scroll_page(browser,25)
 
 
         divs = browser.find_elements_by_xpath('//div[@id="tm-tl"]/div')
