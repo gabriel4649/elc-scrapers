@@ -12,7 +12,6 @@ class DeviantArtHelper(HelperBase):
         return self.hxs.select("//div[@class='ctext ch']")
 
     def load_first_page(self, ft):
-        # TODO: Not always catching the title
         ft['title'] =  self.hxs.select("//div[@class='forum-header']/h1/text()").extract()[0]
 
         p = self.get_posts()[0]
@@ -46,6 +45,13 @@ class DeviantArtHelper(HelperBase):
         next_page_url_relative = safe_list_get(next_page_url_relative, 0)
 
         if next_page_url_relative:
-            return make_url_absolute(self.response, next_page_url_relative)
+            # Let's check we are not entering an endless loop
+            check = safe_list_get(self.hxs.select("//li[@class='number nomargin']/a[@class='away' and @data-offset='0']/@href").extract(), 0)
+            if check:
+                url = make_url_absolute(self.response, next_page_url_relative)
+                print url
+                return url
+            else:
+                next_page_url_relative = ''
 
         return next_page_url_relative
