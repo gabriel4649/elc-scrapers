@@ -44,7 +44,10 @@ class DeviantArtHelper(HelperBase):
         next_page_url_relative = self.hxs.select("//li[@class='next']/a[@class='away']/@href").extract()
         next_page_url_relative = safe_list_get(next_page_url_relative, 0)
 
-        if next_page_url_relative and "comments_view" not in next_page_url_relative:
+        if "comments_view" in next_page_url_relative:
+            next_page_url_relative = ''
+
+        if next_page_url_relative:
             # Let's check we are not entering an endless loop
             check = safe_list_get(self.hxs.select("//li[@class='number nomargin']/a[@class='away' and @data-offset='0']/@href").extract(), 0)
             if check:
