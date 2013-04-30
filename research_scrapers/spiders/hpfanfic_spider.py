@@ -49,7 +49,7 @@ class HPFanFicSpider(CrawlSpider, HPFanFicHelper):
         "http://www.hpfanfictionforums.com/index.php?showforum=142"]
 
     rules = (
-        Rule(SgmlLinkExtractor(allow='showtopic=[0-9]+', deny=r'page=\d+'), \
+        Rule(SgmlLinkExtractor(allow='.*topic.*'), \
              callback=r'parse_thread', follow=False),
         Rule(SgmlLinkExtractor( \
                                 allow=r'showforum=\d+&prune_day=100&sort_by=Z-A&sort_key=last_post&topicfilter=all&page=\d+', deny=('setlanguage', 'cal_id', 'views', 'posts', 'start_data', 'st=&'))),
