@@ -10,17 +10,21 @@ class EtsyHelper(HelperBase):
     def __init__(self):
         HelperBase.__init__(self)
         # 4:05 pm Apr 25, 2013 EDT
+        # 11:48 am May 10, 2013 EDT
         self.time_string = "%I:%M %p %b %d, %Y %Z"
 
     def get_posts(self):
-        return self.hxs.select("//div[@class='right']")
+        replies = self.hxs.select("//div[@id='original-post']/div")
+        replies.extend(self.hxs.select("//div[@id='replies']/div[contains(@class, 'post')]"))
+        #code.interact(local=locals())
+        return replies
+
 
     def load_first_page(self, ft):
-        first_post = self.hxs.select("//div[@class='forum-post first']")
-        ft['title'] = self.hxs.select( \
-            "//span[@class='subheading']/text()").extract()[0]
-        ft['author'] = first_post.select( \
-            ".//span[@class='notranslate']/a[contains(@href,'people')]/text()").extract()[0]
+        ft['title'] = self.hxs.select("//h2[@class='thread-title title ff-medium']/text()").extract()[0]
+
+
+        ft['author'] =  self.hxs.select("//div[@class='meta-info']/span[@class='author']/a/text()").extract()[0]
         ft['url'] = self.response.url
         ft['forum_name'] = self.hxs.select("//h1/text()").extract()[0]
         ft['responses'] = []
@@ -28,10 +32,10 @@ class EtsyHelper(HelperBase):
     def populate_post_data(self, p):
         fp = {}
 
-        fp['body'] = ''.join(p.select(".//p[@class='body']/descendant-or-self::*/text()").extract())
+        fp['body'] = ''.join(p.select(".//div[@class='post-body']/descendant-or-self::*/text()").extract())
         fp['author'] = p.select( \
-            ".//span[@class='notranslate']/a[contains(@href,'people')]/text()").extract()[0]
-        fp['date'] = p.select(".//p[@class='foot last']/a/text()").extract()[0]
+            ".//span[@class='author']/a[contains(@href,'people')]/text()").extract()[0]
+        fp['date'] = p.select(".//a[@class='create_date']/text()").extract()[0].strip()
 
         return fp
 
