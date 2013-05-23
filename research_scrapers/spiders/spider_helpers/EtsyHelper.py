@@ -11,7 +11,7 @@ class EtsyHelper(HelperBase):
         HelperBase.__init__(self)
         # 4:05 pm Apr 25, 2013 EDT
         # 11:48 am May 10, 2013 EDT
-        self.time_string = "%I:%M %p %b %d, %Y %Z"
+        self.time_string = "%I:%M %p %b %d, %Y"
 
     def get_posts(self):
         replies = self.hxs.select("//div[@id='original-post']/div")
@@ -35,7 +35,7 @@ class EtsyHelper(HelperBase):
         fp['body'] = ''.join(p.select(".//div[@class='post-body']/descendant-or-self::*/text()").extract())
         fp['author'] = p.select( \
             ".//span[@class='author']/a[contains(@href,'people')]/text()").extract()[0]
-        fp['date'] = p.select(".//a[@class='create_date']/text()").extract()[0].strip()
+        fp['date'] = p.select(".//a[@class='create_date']/text()").extract()[0].strip()[0:-4]
 
         return fp
 
