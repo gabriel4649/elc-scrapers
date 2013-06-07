@@ -222,3 +222,6 @@ interactive Scrapy enabled Python shell.
    In the files pipelines.py there is a Scrapy [[http://doc.scrapy.org/en/latest/topics/item-pipeline.html][Item Pipeline]] called
    TextFileExportPipeline. In order to modify the data output you
    must modify that class.
+* Copying
+This is and Open Source Free Software provided under the terms of the
+GNU GPL v3.0. For the full license text read the COPYING file.
