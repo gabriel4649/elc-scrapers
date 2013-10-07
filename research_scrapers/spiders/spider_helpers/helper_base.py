@@ -46,7 +46,6 @@ class HelperBase(object):
 
         self.hxs = HtmlXPathSelector(response)
         self.response = response
-
         # data_key was ft
         if self.data_key in response.meta:
             data = response.meta[self.data_key]
