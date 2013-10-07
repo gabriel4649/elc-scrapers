@@ -1,4 +1,4 @@
-from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.spider import BaseSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.http import Request
 from research_scrapers.items import ForumThread
@@ -10,16 +10,19 @@ import time
 import urllib2
 from random import randint
 
-class YouTubeSpider(CrawlSpider):
+class YouTubeSpider(BaseSpider):
     name = "youtube"
-    start_urls =  \
-        ["http://productforums.google.com/forum/#%21categories/youtube"]
-
-    rules = [Rule(SgmlLinkExtractor(
-    allow=('youtube')), callback='parse_page')]
+    start_urls =  [\
+         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/UpiMcBG6Trs",
+         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/nNW3xY8obg4",
+         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/EvQdpyQIktQ",
+         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/HH42EJTQyNo",
+         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/mBIkPbmoJsA",
+         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/gxrb0UYGswY",
+         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/vJUyidB4mzU"]
 
     def __init__(self):
-        CrawlSpider.__init__(self)
+        BaseSpider.__init__(self)
         self.verificationErrors = []
         response = urllib2.urlopen("http://code.jquery.com/jquery.min.js")
         jquery = response.read()
@@ -31,11 +34,9 @@ class YouTubeSpider(CrawlSpider):
     def __del__(self):
         self.browser.close()
         print self.verificationErrors
-        CrawlSpider.__del__(self)
 
     def parse_page(self, response):
-        self.load_page_with_jquery( \
-            'http://productforums.google.com/forum/#%21categories/youtube')
+        self.load_page_with_jquery('http://productforums.google.com/forum/#%21categories/youtube')
         self.browser.execute_script('window.onbeforeunload = function() {}')
         self.scroll_page(self.browser,12700)
 
@@ -69,25 +70,28 @@ class YouTubeSpider(CrawlSpider):
                 ".//span[contains(text(),'view')]").text
 
             ft['responses'] = []
-            request = Request(link, dont_filter=True, callback=self.parse_thread)
+            request = Request(link, dont_filter=True,
+                              callback=self.parse_thread)
             request.meta['ft'] = ft
 
             yield request
 
-    def parse_thread(self, response):
-        ft = response.meta['ft']
+    def parse(self, response):
+        for url in self.start_urls:
+            self.parse_thread(url)
+
+    def parse_thread(self, url):
         browser = webdriver.Firefox()
-        browser.get(ft['url'])
+        browser.get(url)
         browser.execute_script(self.jquery) # Load jquery
-        alert = browser.switch_to_alert()
-        alert.dismiss()
+        # alert = browser.switch_to_alert()
+        # alert.dismiss()
         time.sleep(4) # wait for page to load
-
-        self.scroll_page(browser,25)
-
+        self.scroll_page(browser, 25)
 
         divs = browser.find_elements_by_xpath('//div[@id="tm-tl"]/div')
-
+        ft = ForumThread()
+        ft['responses'] = []
         for div in divs:
             fp = {}
 
@@ -100,12 +104,14 @@ class YouTubeSpider(CrawlSpider):
             fp['author'] = author
             #interact(local=locals())
             fp['body'] = div.find_element_by_xpath( \
-                ".//div[@style='overflow: hidden']/descendant-or-self::*").text
+                ".//div[@style='overflow: auto']/descendant-or-self::*").text
             fp['date'] =  div.find_element_by_xpath( \
                 ".//td[@valign='top' and @align='right']/div[2]").text
+
             ft['responses'].append(fp)
 
         browser.close()
+
         return ft
 
     def load_page_with_jquery(self, url):
@@ -117,4 +123,4 @@ class YouTubeSpider(CrawlSpider):
         for i in range(scrolls):
             browser.execute_script( \
                 '$("div").animate({ scrollTop: 100000 }, "fast");')
-            time.sleep(randint(1,4))
+            time.sleep(randint(1, 4))
