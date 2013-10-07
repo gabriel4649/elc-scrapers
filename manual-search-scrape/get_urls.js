@@ -7,6 +7,9 @@ function getLinks(urls) {
         if (index == -1) {
             console.log("Inserting:" + link);
             urls.push(link);
+            $.post("http://localhost:5000/save_url",
+                  {url: link});
+
         }
     }
 
