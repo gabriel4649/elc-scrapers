@@ -9,17 +9,11 @@ from selenium.webdriver.common.alert import Alert
 import time
 import urllib2
 from random import randint
+from urls import urls
 
 class YouTubeSpider(BaseSpider):
     name = "youtube"
-    start_urls =  [\
-         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/UpiMcBG6Trs",
-         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/nNW3xY8obg4",
-         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/EvQdpyQIktQ",
-         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/HH42EJTQyNo",
-         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/mBIkPbmoJsA",
-         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/gxrb0UYGswY",
-         "http://productforums.google.com/forum/#!topicsearchin/youtube/copyright/youtube/vJUyidB4mzU"]
+    start_urls = urls
 
     def __init__(self):
         BaseSpider.__init__(self)
@@ -35,50 +29,9 @@ class YouTubeSpider(BaseSpider):
         self.browser.close()
         print self.verificationErrors
 
-    def parse_page(self, response):
-        self.load_page_with_jquery('http://productforums.google.com/forum/#%21categories/youtube')
-        self.browser.execute_script('window.onbeforeunload = function() {}')
-        self.scroll_page(self.browser,12700)
-
-        divs = self.browser.find_elements_by_xpath( \
-            '//div[starts-with(@id,"topic_row_")]')
-        #divs = self.browser.find_elements_by_xpath('//div[@role="listitem"]')
-        for div in divs:
-            ft = ForumThread()
-
-            a = div.find_element_by_xpath(".//a")
-            link = a.get_attribute('href')
-            # Enconde the !
-            link.replace('!', '%21')
-            ft['url'] = link
-            ft['title'] = a.text
-            print "TITLE"
-            print a.text
-            print "LINK"
-            print link
-            ft['author'] = \
-                div.find_element_by_xpath( \
-                ".//span[starts-with(text(),'By ')]").text[3:]
-
-            # n posts, get the n
-            ft['number_of_comments'] = \
-                div.find_element_by_xpath( \
-                ".//span[contains(text(),'post')]").text
-
-            # n views, get the n
-            ft['views'] = div.find_element_by_xpath( \
-                ".//span[contains(text(),'view')]").text
-
-            ft['responses'] = []
-            request = Request(link, dont_filter=True,
-                              callback=self.parse_thread)
-            request.meta['ft'] = ft
-
-            yield request
-
     def parse(self, response):
         for url in self.start_urls:
-            self.parse_thread(url)
+            yield self.parse_thread(url)
 
     def parse_thread(self, url):
         browser = webdriver.Firefox()
@@ -87,10 +40,12 @@ class YouTubeSpider(BaseSpider):
         # alert = browser.switch_to_alert()
         # alert.dismiss()
         time.sleep(4) # wait for page to load
-        self.scroll_page(browser, 25)
+        self.scroll_page(browser)
 
         divs = browser.find_elements_by_xpath('//div[@id="tm-tl"]/div')
         ft = ForumThread()
+
+        ft['url'] = url
         ft['responses'] = []
         for div in divs:
             fp = {}
@@ -119,8 +74,8 @@ class YouTubeSpider(BaseSpider):
         self.browser.execute_script(self.jquery) # Load jquery
         time.sleep(3) # Make sure we had enough time to load everything
 
-    def scroll_page(self, browser, scrolls):
+    def scroll_page(self, browser, scrolls=1):
         for i in range(scrolls):
             browser.execute_script( \
                 '$("div").animate({ scrollTop: 100000 }, "fast");')
-            time.sleep(randint(1, 4))
+            time.sleep(randint(2, 4))
