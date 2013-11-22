@@ -43,3 +43,6 @@ nosetests.xml
 # Documentation
 *.pdf
 *.tex
+
+# Data file
+*.txt
